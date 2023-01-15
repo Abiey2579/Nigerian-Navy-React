@@ -5,7 +5,6 @@ import NAVY_LOGO from "./../../../Asset/Images/navy_logo.png";
 const LogoStamp = () => {
   const TextStyle = {
     color: ColorPalette.Gray,
-    fontFamily: "Open Sans Regular",
   };
   return (
     <div
