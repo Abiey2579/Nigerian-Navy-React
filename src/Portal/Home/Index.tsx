@@ -7,7 +7,7 @@ import NavigationBar from "./../Components/Navbar/Index";
 
 // PAGE CUSTOM COMPONENTS
 import Hero from "./Hero";
-// import WhyNavy from "./WhyNavy";
+import WhyJoinNavy from "./WhyJoinNavy";
 // import CNS from "./CNS";
 // import CTA from "./CTA";
 
@@ -16,8 +16,8 @@ const PortalHomePage = () => {
     <React.Fragment>
       <NavigationBar />
       <Hero />
+      <WhyJoinNavy />
       {/*
-      <WhyNavy />
       <CNS />
       <CTA />
       <Footer />

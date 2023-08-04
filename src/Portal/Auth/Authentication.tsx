@@ -5,14 +5,8 @@ import LogoStamp from "../Components/Navbar/LogoStamp";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 
-// FIREBASE AUTH CONTEXT
-import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "./../Firebase/Config";
-
 const Authentication = () => {
   const [SwapAuthTo, setSwapAuthTo] = useState("Sign Up");
-  const navigate = useNavigate();
 
   const HandleSwapToSignIn = () => {
     setSwapAuthTo("Sign In");
@@ -22,61 +16,23 @@ const Authentication = () => {
     setSwapAuthTo("Sign Up");
   };
 
-  const googleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        //   const token = credential.accessToken;
-
-        // The signed-in user info.
-        // @ts-ignore
-        const user = result.user;
-        console.log(result);
-        navigate("/application");
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-        console.log(error);
-      });
+  const handleSignIn = async () => {
+    alert("Sign In");
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSignUp = async () => {
+    alert("Sign Up");
   };
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%,-50%)",
-      }}
-      className="flex flex-col items-center sm:justify-between lg:justify-center xs:px-2 sm:px-5 md:px-10 lg:px-20 xs:w-[100vw] sm:w-[450px] md:w-[450px]"
-    >
+    <div className="h-screen w-screen flex flex-col items-center justify-center px-5 md:max-w-lg m-auto">
       <div
         style={{
-          border: "1px",
           borderColor: ColorPalette.Sky_Blue,
-          borderRadius: "5px",
-          borderStyle: "solid",
         }}
-        className="flex flex-col sm:mt-5 lg:mt-0 h-[500px] xs:w-[100vw] sm:w-[450px] md:w-[450px] py-[40px] px-[30px]"
+        className="flex flex-col h-[500px] sm:border-0 md:border rounded w-full py-10 sm:px-0 md:px-8"
       >
-        <div className="flex flex-col items-center sm:mb-10 lg:mb-0">
+        <div className="flex flex-col items-start md:items-center mb-5">
           {/* BEGIN OF LOGO STAMP COMPONENT */}
           <LogoStamp />
           {/* END OF LOGO STAMP COMPONENT */}
@@ -90,7 +46,7 @@ const Authentication = () => {
         {SwapAuthTo === "Sign In" && (
           <SignIn
             HandleSwapToSignUp={HandleSwapToSignUp}
-            handleAuthContext={handleGoogleSignIn}
+            handleAuthContext={handleSignIn}
           />
         )}
         {/* END OF SIGN IN COMPONENT */}
@@ -99,12 +55,12 @@ const Authentication = () => {
         {SwapAuthTo === "Sign Up" && (
           <SignUp
             HandleSwapToSignIn={HandleSwapToSignIn}
-            handleAuthContext={handleGoogleSignIn}
+            handleAuthContext={handleSignUp}
           />
         )}
         {/* END OF SIGN UP COMPONENT */}
       </div>
-      <div className="flex justify-evenly py-3 w-full">
+      <div className="hidden md:flex lg:flex justify-evenly py-3 w-full">
         <Link to={"/faq"}>
           <span
             style={{ color: ColorPalette.Black_80 }}

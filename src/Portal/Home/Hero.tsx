@@ -40,16 +40,14 @@ const Hero = () => {
             join Nigerian Navy. Stay responsible for the country’s safety and
             future of the next generations.
           </p>
-          <Link to="/auth">
+          <Link to={"/auth"}>
             <span
               style={{
                 color: ColorPalette.Dark_Blue,
                 backgroundColor: ColorPalette.Gray,
-                fontSize: "16px",
-                fontWeight: 400,
                 margin: 0,
               }}
-              className="rounded-full max-w-max px-6 py-2 hover:bg-[#f7f7f7] focus-within:bg-[#f7f7f7]"
+              className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-[5px] border border-transparent px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-600"
             >
               APPLY NOW
             </span>

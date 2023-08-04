@@ -18,8 +18,8 @@ const SignUp = (props: any) => {
         Use your Google Account to continue
       </span>
       <button
-        style={{ backgroundColor: ColorPalette.Sky_Blue }}
-        className="flex justify-center items-center py-3 px-2 mt-4 mb-5 rounded font-semibold text-gray-700"
+        style={{ borderColor: ColorPalette.Sky_Blue }}
+        className="flex justify-center items-center py-3 border px-2 mt-4 mb-5 rounded font-semibold text-gray-700"
         onClick={props.handleAuthContext}
       >
         <img src={Google_Logo_SVG} width={35} className="mr-3" alt="" />
