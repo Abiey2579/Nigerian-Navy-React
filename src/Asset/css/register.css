@@ -1,0 +1,98 @@
+div.AuthFormContainer {
+  width: 290px;
+  background-color: #f9f8fc;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  padding: 0 10px;
+}
+
+div.AuthFormContainer header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5rem 0;
+}
+
+div.AuthFormContainer header > div {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  float: right;
+}
+
+div.AuthFormContainer header > div * {
+  line-height: 0.9;
+  color: #191919;
+}
+
+div.AuthFormContainer header > div h3 {
+  margin: 0;
+  font-size: 26px;
+  font-family: catamaran ExtraBold;
+}
+
+div.AuthFormContainer header > div span:nth-child(2) {
+  font-size: 20px;
+  font-family: catamaran Medium;
+}
+
+/* **************** */
+div.AuthFormContainer form {
+  text-align: center;
+}
+
+div.AuthFormContainer form > div > h2 {
+  text-align: center;
+  font-size: 26px;
+  color: #6e707e;
+}
+
+div.AuthFormContainer form > input {
+  padding: 5px 10px;
+  background-color: #fff;
+  border: 1px solid #dddfeb;
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 0.2rem;
+  outline: none;
+}
+
+div.AuthFormContainer form > input::placeholder {
+  color: #858796;
+  font-weight: 500;
+}
+
+div.AuthFormContainer form > button {
+  padding: 5px 10px;
+  background-color: #0075ad;
+  color: #f9f8fc;
+  border: 1px solid #dddfeb;
+  margin-bottom: 10px;
+  width: 92%;
+  border-radius: 0.2rem;
+  outline: none;
+}
+
+div.AuthFormContainer form > span {
+  margin: 12px 0;
+  display: block;
+  font-size: 14px;
+  color: #858796;
+}
+
+div.AuthFormContainer form > a {
+  padding: 5px 10px;
+  background-color: #0075ad;
+  color: #f9f8fc;
+  border: 1px solid #dddfeb;
+  margin-bottom: 10px;
+  width: 92%;
+  border-radius: 0.2rem;
+  outline: none;
+  display: block;
+  margin: auto;
+  text-decoration: none;
+}

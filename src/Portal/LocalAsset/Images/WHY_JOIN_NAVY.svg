@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="566" height="414" viewBox="0 0 566 414">
-  <g id="Group_221" data-name="Group 221" transform="translate(-138 -980)">
-    <rect id="Rectangle_171" data-name="Rectangle 171" width="200" height="200" rx="20" transform="translate(504 1136)" fill="#f7f7f7"/>
-    <path id="Path_1" data-name="Path 1" d="M100,0A100,100,0,1,1,0,100,100,100,0,0,1,100,0Z" transform="translate(259 1194)" fill="#0065a0"/>
-    <rect id="Rectangle_169" data-name="Rectangle 169" width="200" height="200" rx="20" transform="translate(138 1080)" fill="#013871"/>
-    <path id="Intersection_1" data-name="Intersection 1" d="M100,300V100H300c0,110.457-89.543,200-200,200Z" transform="translate(259 1280) rotate(-90)" fill="#00a5ec"/>
-  </g>
-</svg>

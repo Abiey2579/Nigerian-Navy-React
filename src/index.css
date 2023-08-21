@@ -4,9 +4,9 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Catamaran", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -14,4 +14,49 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.recruitment-nav-link::after {
+  content: "";
+  width: 40px;
+  height: 1.5px;
+  background-color: #0065a0;
+  display: block;
+  margin: auto;
+}
+
+.auth-nav-link::after {
+  content: "";
+  width: 40px;
+  height: 1.5px;
+  background-color: #f7f7f7;
+  display: block;
+  margin: auto;
+}
+
+.auth-nav-link:hover::after {
+  content: "";
+  width: 40px;
+  height: 1.5px;
+  background-color: #0065a0;
+  display: block;
+  margin: auto;
+}
+
+.AuthNavbar {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.AuthMainContainer::after {
+  content: "";
+  width: 100%;
+  height: 100vh;
+  display: block;
+  position: absolute;
+  z-index: 0;
+  overflow: hidden;
+}
+
+div.Printable_Area {
+  page-break-after: always !important;
 }

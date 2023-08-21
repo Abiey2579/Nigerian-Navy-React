@@ -1,0 +1,40 @@
+header.DashboardNavigator {
+  margin: 3rem 0;
+  width: 100%;
+}
+
+header.DashboardNavigator span {
+  padding: 10px 26px;
+  display: inline-block;
+  color: #0075ad;
+  background-color: #f9f8fc;
+  font-weight: bold;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+header.DashboardNavigator a.ActiveNavigator {
+  background-color: #0075ad;
+  color: #f9f8fc;
+}
+
+header.DashboardNavigator a {
+  padding: 10px 20px;
+  display: inline-block;
+  font-weight: bold;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+header.DashboardNavigator a::before {
+  content: "";
+}
+
+header.DashboardNavigator a:hover {
+  background-color: #f9f8fc;
+  color: #122a69 !important;
+  transition: 0.3s;
+  text-decoration: none;
+}
