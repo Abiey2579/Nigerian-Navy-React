@@ -12,7 +12,6 @@ import EducationInfo from "./Application/Education_Info";
 import SSCEGrade from "./Application/SSCE_Grade";
 import AdditionalInfo from "./Application/Additional_Info";
 import ApplicationPreview from "./Application/Application_Preview";
-import { navy_app_server } from "./Asset/config/MongoDB";
 
 const router = createBrowserRouter([
   {
@@ -71,7 +70,6 @@ const router = createBrowserRouter([
 ]);
 
 const NigerianNavy = () => {
-  navy_app_server();
   return <RouterProvider router={router} />;
 };
 

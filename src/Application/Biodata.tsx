@@ -13,8 +13,6 @@ import ApplicationSteps from "./components/ApplicationSteps";
 import Navbar from "./components/Navbar";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { useNavigate } from "react-router-dom";
-import { BiodataModel } from "../Asset/config/Biodata_Schema";
-import mongoose from "mongoose";
 
 const Biodata = () => {
   const [title, setTitle] = useState<string>("");
@@ -66,35 +64,6 @@ const Biodata = () => {
       ) {
         return;
       }
-      // PREPARING FOR DATABASE
-      const Biodata_Content = new BiodataModel({
-        uid: "mbyahya",
-        title: title,
-        surName: surName,
-        firstName: firstName,
-        otherName: otherName,
-        religion: religion,
-        maritalStatus: maritalStatus,
-        NoOfChildren: NoOfChildren,
-        DOB: DOB,
-        gender: gender,
-        height: height,
-        stateOfOrigin: stateOfOrigin,
-        LGA: LGA,
-        homeTown: homeTown,
-        examCenter: examCenter,
-        mobileNumber: mobileNumber,
-        NIN: NIN,
-        tattoo: tattoo,
-        hobbies: hobbies,
-        department: department,
-        tribalMarks: tribalMarks,
-        permanentAddress: permanentAddress,
-        contactAddress: contactAddress,
-      });
-
-      const promise = await Biodata_Content.save();
-      console.log(promise);
 
       // navigate(uriPaths.NOK);
       alert("Saved");
