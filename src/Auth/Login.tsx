@@ -6,12 +6,15 @@ import "../Asset/css/register.css";
 import { Link } from "react-router-dom";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { FormEvent } from "react";
+import { account } from "../Asset/config/appwrite";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email && !password) {
       alert("All Fields are Required");
@@ -19,7 +22,12 @@ const Login = () => {
     }
 
     try {
-      // send to MongoDB
+      const promise = await account.createEmailSession(email, password);
+      if (promise.userId) {
+        navigate(uriPaths.BIODATA);
+      } else {
+        alert("Incorrect Email or Password");
+      }
     } catch (error) {
       throw new Error((error as Error).message);
     }

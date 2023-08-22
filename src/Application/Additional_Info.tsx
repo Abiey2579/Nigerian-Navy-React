@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import ApplicationSteps from "./components/ApplicationSteps";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { useNavigate } from "react-router-dom";
+import {
+  save_Additional_Info,
+  fetch_Additional_Info,
+} from "../Asset/config/functions";
+import { account } from "../Asset/config/appwrite";
+import * as Model from "../Asset/model/model";
 
 const AdditionalInfo = () => {
   const [q1, setQ1] = useState<boolean>(false);
@@ -40,8 +46,12 @@ const AdditionalInfo = () => {
   const [Relative2_StillInService, setRelative2_StillInService] =
     useState<string>("");
 
+  // FETCHED ADDITIONAL INFO STATE
+  const [fetched_Additional_Info_State, set_fetched_Additional_Info_State] =
+    useState<Model.Additional_Info>();
+
   const navigate = useNavigate();
-  const handleNext = () => {
+  const handleNext = async () => {
     try {
       if (
         question1.trim() === "" ||
@@ -52,7 +62,38 @@ const AdditionalInfo = () => {
       ) {
         return;
       }
-      navigate(uriPaths.PREVIEW);
+
+      const promise = await save_Additional_Info({
+        question1: question1,
+        question1_Reason: question1_Reason,
+
+        question2: question2,
+        question2_Reason: question2_Reason,
+
+        question3: question3,
+        question3_Reason: question3_Reason,
+        question3_Duration: question3_Duration,
+
+        question4: question4,
+        question4_Reason: question4_Reason,
+        question4_Conviction: question4_Conviction,
+
+        question5: question5,
+        question5_Reason: question5_Reason,
+
+        Relative1_Name: Relative1_Name,
+        Relative1_LastRank: Relative1_LastRank,
+        Relative1_Force: Relative1_Force,
+        Relative1_StillInService: Relative1_StillInService,
+
+        Relative2_Name: Relative2_Name,
+        Relative2_LastRank: Relative2_LastRank,
+        Relative2_Force: Relative2_Force,
+        Relative2_StillInService: Relative2_StillInService,
+      });
+
+      console.log(promise);
+      // navigate(uriPaths.PREVIEW);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -61,6 +102,30 @@ const AdditionalInfo = () => {
   const handlePrevious = () => {
     navigate(uriPaths.SSCE);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const promise = await account.getSession("current");
+        if (promise.userId) {
+          const fetched_Additional_Info = await fetch_Additional_Info(
+            promise.userId
+          );
+          if (fetched_Additional_Info) {
+            set_fetched_Additional_Info_State(fetched_Additional_Info);
+          }
+        } else {
+          await account.deleteSessions().finally(() => {
+            navigate(uriPaths.LOGIN);
+          });
+        }
+      } catch (error) {
+        navigate(uriPaths.LOGIN);
+      }
+    };
+
+    // fetchData();
+  }, [fetched_Additional_Info_State]);
 
   return (
     <>
@@ -80,7 +145,7 @@ const AdditionalInfo = () => {
                   e.target.value === "Yes" ? setQ1(true) : setQ1(false);
                   setQuestion1(e.target.value);
                 }}
-                value={question1}
+                value={fetched_Additional_Info_State?.question1 ?? question1}
                 required
               >
                 <option value=""></option>
@@ -96,7 +161,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setQuestion1_Reason(e.target.value)}
-                value={question1_Reason}
+                value={
+                  fetched_Additional_Info_State?.question1_Reason ??
+                  question1_Reason
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -113,7 +181,7 @@ const AdditionalInfo = () => {
                   e.target.value === "Yes" ? setQ2(true) : setQ2(false);
                   setQuestion2(e.target.value);
                 }}
-                value={question2}
+                value={fetched_Additional_Info_State?.question2 ?? question2}
                 required
               >
                 <option value=""></option>
@@ -129,7 +197,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setQuestion2_Reason(e.target.value)}
-                value={question2_Reason}
+                value={
+                  fetched_Additional_Info_State?.question2_Reason ??
+                  question2_Reason
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -146,7 +217,7 @@ const AdditionalInfo = () => {
                   e.target.value === "Yes" ? setQ3(true) : setQ3(false);
                   setQuestion3(e.target.value);
                 }}
-                value={question3}
+                value={fetched_Additional_Info_State?.question3 ?? question3}
                 required
               >
                 <option value=""></option>
@@ -163,7 +234,10 @@ const AdditionalInfo = () => {
                 <input
                   type="text"
                   onChange={(e) => setQuestion3_Reason(e.target.value)}
-                  value={question3_Reason}
+                  value={
+                    fetched_Additional_Info_State?.question3_Reason ??
+                    question3_Reason
+                  }
                   className="border p-2 rounded outline-0"
                 />
               </div>
@@ -175,7 +249,10 @@ const AdditionalInfo = () => {
                 <input
                   type="text"
                   onChange={(e) => setQuestion3_Duration(e.target.value)}
-                  value={question3_Duration}
+                  value={
+                    fetched_Additional_Info_State?.question3_Duration ??
+                    question3_Duration
+                  }
                   className="border p-2 rounded outline-0"
                 />
               </div>
@@ -193,7 +270,7 @@ const AdditionalInfo = () => {
                   e.target.value === "Yes" ? setQ4(true) : setQ4(false);
                   setQuestion4(e.target.value);
                 }}
-                value={question4}
+                value={fetched_Additional_Info_State?.question4 ?? question4}
                 required
               >
                 <option value=""></option>
@@ -210,7 +287,10 @@ const AdditionalInfo = () => {
                 <input
                   type="text"
                   onChange={(e) => setQuestion4_Reason(e.target.value)}
-                  value={question4_Reason}
+                  value={
+                    fetched_Additional_Info_State?.question4_Reason ??
+                    question4_Reason
+                  }
                   className="border p-2 rounded outline-0"
                 />
               </div>
@@ -222,7 +302,10 @@ const AdditionalInfo = () => {
                 <input
                   type="text"
                   onChange={(e) => setQuestion4_Conviction(e.target.value)}
-                  value={question4_Conviction}
+                  value={
+                    fetched_Additional_Info_State?.question4_Conviction ??
+                    question4_Conviction
+                  }
                   className="border p-2 rounded outline-0"
                 />
               </div>
@@ -240,7 +323,7 @@ const AdditionalInfo = () => {
                   e.target.value === "Yes" ? setQ5(true) : setQ5(false);
                   setQuestion5(e.target.value);
                 }}
-                value={question5}
+                value={fetched_Additional_Info_State?.question5 ?? question5}
                 required
               >
                 <option value=""></option>
@@ -256,7 +339,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setQuestion5_Reason(e.target.value)}
-                value={question5_Reason}
+                value={
+                  fetched_Additional_Info_State?.question5_Reason ??
+                  question5_Reason
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -272,7 +358,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setRelative1_Name(e.target.value)}
-                value={Relative1_Name}
+                value={
+                  fetched_Additional_Info_State?.Relative1_Name ??
+                  Relative1_Name
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -281,7 +370,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setRelative1_LastRank(e.target.value)}
-                value={Relative1_LastRank}
+                value={
+                  fetched_Additional_Info_State?.Relative1_LastRank ??
+                  Relative1_LastRank
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -289,7 +381,10 @@ const AdditionalInfo = () => {
               <label>Force? </label>
               <select
                 onChange={(e) => setRelative1_Force(e.target.value)}
-                value={Relative1_Force}
+                value={
+                  fetched_Additional_Info_State?.Relative1_Force ??
+                  Relative1_Force
+                }
                 className="border p-2 rounded outline-0"
               >
                 <option value=""></option>
@@ -304,7 +399,10 @@ const AdditionalInfo = () => {
               <label>Still in service? </label>
               <select
                 onChange={(e) => setRelative1_StillInService(e.target.value)}
-                value={Relative1_StillInService}
+                value={
+                  fetched_Additional_Info_State?.Relative1_StillInService ??
+                  Relative1_StillInService
+                }
                 className="border p-2 rounded outline-0"
               >
                 <option value=""></option>
@@ -320,7 +418,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setRelative2_Name(e.target.value)}
-                value={Relative2_Name}
+                value={
+                  fetched_Additional_Info_State?.Relative2_Name ??
+                  Relative2_Name
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -329,7 +430,10 @@ const AdditionalInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setRelative2_LastRank(e.target.value)}
-                value={Relative2_LastRank}
+                value={
+                  fetched_Additional_Info_State?.Relative2_LastRank ??
+                  Relative2_LastRank
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -337,7 +441,10 @@ const AdditionalInfo = () => {
               <label>Force? </label>
               <select
                 onChange={(e) => setRelative2_Force(e.target.value)}
-                value={Relative2_Force}
+                value={
+                  fetched_Additional_Info_State?.Relative2_Force ??
+                  Relative2_Force
+                }
                 className="border p-2 rounded outline-0"
               >
                 <option value=""></option>
@@ -352,7 +459,10 @@ const AdditionalInfo = () => {
               <label>Still in service? </label>
               <select
                 onChange={(e) => setRelative2_StillInService(e.target.value)}
-                value={Relative2_StillInService}
+                value={
+                  fetched_Additional_Info_State?.Relative2_StillInService ??
+                  Relative2_StillInService
+                }
                 className="border p-2 rounded outline-0"
               >
                 <option value=""></option>

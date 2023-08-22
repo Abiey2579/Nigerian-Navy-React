@@ -1,10 +1,40 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as uriPaths from "../Asset/common/uriPaths";
 import Navbar from "./components/Navbar";
 import ApplicationSteps from "./components/ApplicationSteps";
 import { useNavigate } from "react-router-dom";
+import {
+  fetch_Biodata,
+  fetch_NOK_Guardian,
+  fetch_Education_Info,
+  fetch_SSCE_Grade,
+  fetch_Additional_Info,
+} from "../Asset/config/functions";
+import { account } from "../Asset/config/appwrite";
+import * as Model from "../Asset/model/model";
 
 const ApplicationPreview = () => {
+  // FETCHED BIODATA STATE
+  const [fetched_Biodata_State, set_fetched_Biodata_State] =
+    useState<Model.Biodata>();
+
+  // FETCHED NOK GUARDIAN STATE
+  const [fetched_NOK_Guardian_State, set_fetched_NOK_Guardian_State] =
+    useState<Model.NOK_Guardian>();
+
+  // FETCHED EDUCATION INFO STATE
+  const [fetched_Education_Info_State, set_fetched_Education_Info_State] =
+    useState<Model.Education_Info>();
+
+  // FETCHED SSCE GRADE STATE
+  const [fetched_SSCE_Grade_State, set_fetched_SSCE_Grade_State] =
+    useState<Model.SSCE_Grade>();
+
+  // FETCHED ADDITIONAL INFO STATE
+  const [fetched_Additional_Info_State, set_fetched_Additional_Info_State] =
+    useState<Model.Additional_Info>();
+
   const navigate = useNavigate();
   const handleSubmit = () => {
     navigate(uriPaths.PRINT_APPLICATION);
@@ -12,6 +42,44 @@ const ApplicationPreview = () => {
 
   const handlePrevious = () => {
     navigate(uriPaths.ADDITIONAL_INFO);
+  };
+
+  const fetch_Preview = async () => {
+    try {
+      const promise = await account.getSession("current");
+      if (promise.userId) {
+        // FETCHING ALL COLLECTIONS
+        const fetched_Biodata = await fetch_Biodata(promise.userId);
+        const fetched_NOK_Guardian = await fetch_NOK_Guardian(promise.userId);
+        const fetched_Education_Info = await fetch_Education_Info(
+          promise.userId
+        );
+        const fetched_SSCE_Grade = await fetch_SSCE_Grade(promise.userId);
+        const fetched_Additional_Info = await fetch_Additional_Info(
+          promise.userId
+        );
+
+        if (
+          fetched_Biodata &&
+          fetched_NOK_Guardian &&
+          fetched_Education_Info &&
+          fetched_SSCE_Grade &&
+          fetched_Additional_Info
+        ) {
+          set_fetched_Biodata_State(fetched_Biodata);
+          set_fetched_NOK_Guardian_State(fetched_NOK_Guardian);
+          set_fetched_Education_Info_State(fetched_Education_Info);
+          set_fetched_SSCE_Grade_State(fetched_SSCE_Grade);
+          set_fetched_Additional_Info_State(fetched_Additional_Info);
+        }
+      } else {
+        await account.deleteSessions().finally(() => {
+          navigate(uriPaths.LOGIN);
+        });
+      }
+    } catch (error) {
+      navigate(uriPaths.LOGIN);
+    }
   };
 
   return (
@@ -31,96 +99,167 @@ const ApplicationPreview = () => {
 
         <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-20">
           <p className="text-black">
-            Title: <span className="ml-2 text-black">Title</span>
+            Title:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.title ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Surname: <span className="ml-2 text-black">Surname</span>
+            Surname:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.surName ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            First Name: <span className="ml-2 text-black">FirstName</span>
+            First Name:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.firstName ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Other Names: <span className="ml-2 text-black">OtherName</span>
+            Other Names:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.otherName ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Religion: <span className="ml-2 text-black">Religion</span>
+            Religion:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.religion ?? ""}
+            </span>
           </p>
           <p className="text-black">
             Marital Status:{" "}
-            <span className="ml-2 text-black">MaritalStatus</span>
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.maritalStatus ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            No. of Children: <span className="ml-2 text-black">NoChildren</span>
+            No. of Children:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.NoOfChildren ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Date of Birth: <span className="ml-2 text-black">DOB</span>
+            Date of Birth:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.DOB ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Gender: <span className="ml-2 text-black">Gender</span>
+            Gender:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.gender ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Height (meters): <span className="ml-2 text-black">Height</span>
+            Height (meters):{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.height ?? ""}
+            </span>
           </p>
           <p className="text-black">
             State of Origin:{" "}
-            <span className="ml-2 text-black">StateOfOrigin</span>
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.stateOfOrigin ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            LGA of Origin: <span className="ml-2 text-black">LGA</span>
+            LGA of Origin:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.LGA ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            HomeTown: <span className="ml-2 text-black">HomeTown</span>
+            HomeTown:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.homeTown ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Mobile Number: <span className="ml-2 text-black">MobileNumber</span>
+            Mobile Number:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.mobileNumber ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Hobbies: <span className="ml-2 text-black">Hobbies</span>
+            Hobbies:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.hobbies ?? ""}
+            </span>
           </p>
           <p className="text-black">
             Email: <span className="ml-2 text-black">Email</span>
           </p>
           <p className="text-black">
-            Tattoo/Body Marks: <span className="ml-2 text-black">Tattoo</span>
+            Tattoo/Body Marks:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.tattoo ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Tribal Marks: <span className="ml-2 text-black">TribalMarks</span>
+            Tribal Marks:{" "}
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.tribalMarks ?? ""}
+            </span>
           </p>
           <p className="text-black col-span-2">
             Permanent Address:{" "}
-            <span className="ml-2 text-black">PermanentAddress</span>
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.permanentAddress ?? ""}
+            </span>
           </p>
           <p className="text-black col-span-2">
             Contact Address:{" "}
-            <span className="ml-2 text-black">ContactAddress</span>
+            <span className="ml-2 text-black">
+              {fetched_Biodata_State?.contactAddress ?? ""}
+            </span>
           </p>
         </div>
 
         <h2 className="text-3xl font-bold my-5">Next of Kin</h2>
         <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-20">
           <p className="text-black">
-            Full Name: <span className="ml-2 text-black">NOKFullName</span>
+            Full Name:{" "}
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.fullName ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Occupation: <span className="ml-2 text-black">NOKOccupation</span>
+            Occupation:{" "}
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.occupation ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Post: <span className="ml-2 text-black">NOKPost</span>
+            Post:{" "}
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.post ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Email: <span className="ml-2 text-black">NOKEmail</span>
+            Email:{" "}
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.email ?? ""}
+            </span>
           </p>
           <p className="text-black">
             Relationship:{" "}
-            <span className="ml-2 text-black">NOKRelationship</span>
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.relationShip ?? ""}
+            </span>
           </p>
           <p className="text-black">
             MobileNumber:{" "}
-            <span className="ml-2 text-black">NOKMobileNumber</span>
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.mobileNumber ?? ""}
+            </span>
           </p>
           <p className="text-black">
             ContactAddress:{" "}
-            <span className="ml-2 text-black">NOKContactAddress</span>
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.contactAddress ?? ""}
+            </span>
           </p>
         </div>
 
@@ -130,11 +269,15 @@ const ApplicationPreview = () => {
         <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-20">
           <p className="text-black">
             Full Name:
-            <span className="ml-2 text-black">GaurdianFullName</span>
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.parentFullName ?? ""}
+            </span>
           </p>
           <p className="text-black">
             Residential Address:
-            <span className="ml-2 text-black">GaurdianResidentialAddress</span>
+            <span className="ml-2 text-black">
+              {fetched_NOK_Guardian_State?.parentResidentialAddress ?? ""}
+            </span>
           </p>
         </div>
 
@@ -146,19 +289,19 @@ const ApplicationPreview = () => {
             <th>Referee Phone</th>
           </thead>
           <tr className="border-b">
-            <td>RefereeName1</td>
-            <td>RefereeAddress1</td>
-            <td>RefereePhone1</td>
+            <th>{fetched_NOK_Guardian_State?.refereeName1 ?? ""}</th>
+            <th>{fetched_NOK_Guardian_State?.refereeAddress1 ?? ""}</th>
+            <th>{fetched_NOK_Guardian_State?.refereePhone1 ?? ""}</th>
           </tr>
           <tr className="border-b">
-            <td>RefereeName2</td>
-            <td>RefereeAddress2</td>
-            <td>RefereePhone2</td>
+            <th>{fetched_NOK_Guardian_State?.refereeName2 ?? ""}</th>
+            <th>{fetched_NOK_Guardian_State?.refereeAddress2 ?? ""}</th>
+            <th>{fetched_NOK_Guardian_State?.refereePhone2 ?? ""}</th>
           </tr>
           <tr className="border-b">
-            <td>RefereeName3</td>
-            <td>RefereeAddress3</td>
-            <td>RefereePhone3</td>
+            <th>{fetched_NOK_Guardian_State?.refereeName3 ?? ""}</th>
+            <th>{fetched_NOK_Guardian_State?.refereeAddress3 ?? ""}</th>
+            <th>{fetched_NOK_Guardian_State?.refereePhone3 ?? ""}</th>
           </tr>
         </table>
 
@@ -171,10 +314,10 @@ const ApplicationPreview = () => {
             <th>To</th>
           </thead>
           <tr className="border-b">
-            <td>PrimarySchool</td>
+            <td>{fetched_Education_Info_State?.primary ?? ""}</td>
             <td>PSLC</td>
-            <td>PrimaryStart</td>
-            <td>PrimaryEnd</td>
+            <td>{fetched_Education_Info_State?.primaryFrom ?? ""}</td>
+            <td>{fetched_Education_Info_State?.primaryTo ?? ""}</td>
           </tr>
         </table>
 
@@ -187,10 +330,12 @@ const ApplicationPreview = () => {
             <th>To</th>
           </thead>
           <tr className="border-b">
-            <td>SecondarySchool</td>
-            <td>SecondaryQualification</td>
-            <td>SecondaryStart</td>
-            <td>SecondaryEnd</td>
+            <td>{fetched_Education_Info_State?.secondary ?? ""}</td>
+            <td>
+              {fetched_Education_Info_State?.secondaryQualification ?? ""}
+            </td>
+            <td>{fetched_Education_Info_State?.secondaryFrom ?? ""}</td>
+            <td>{fetched_Education_Info_State?.secondaryTo ?? ""}</td>
           </tr>
         </table>
 
@@ -199,18 +344,18 @@ const ApplicationPreview = () => {
           <thead className="border-b-2 border-t text-left">
             <th>Institution</th>
             <th>Course of Study</th>
-            <th>Type</th>
             <th>From</th>
             <th>To</th>
-            <th>ClassNameification</th>
+            <th>Qualification</th>
           </thead>
           <tr className="border-b">
-            <td>Institution</td>
-            <td>Course of Study</td>
-            <td>Type</td>
-            <td>From</td>
-            <td>To</td>
-            <td>ClassNameification</td>
+            <td>{fetched_Education_Info_State?.institution ?? ""}</td>
+            <td>{fetched_Education_Info_State?.courseOfStudy ?? ""}</td>
+            <td>{fetched_Education_Info_State?.institutionFrom ?? ""}</td>
+            <td>{fetched_Education_Info_State?.institutionTo ?? ""}</td>
+            <td>
+              {fetched_Education_Info_State?.institutionQualification ?? ""}
+            </td>
           </tr>
         </table>
 
@@ -218,16 +363,28 @@ const ApplicationPreview = () => {
         <div>
           <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-10">
             <p className="text-black">
-              Exam Type: <span className="text-black ml-2">ExamType</span>
+              Exam Type:{" "}
+              <span className="text-black ml-2">
+                {fetched_SSCE_Grade_State?.examType ?? ""}
+              </span>
             </p>
             <p className="text-black">
-              No. of sitting: <span className="text-black ml-2">NoSitting</span>
+              No. of sitting:{" "}
+              <span className="text-black ml-2">
+                {fetched_SSCE_Grade_State?.NoOfSitting ?? ""}
+              </span>
             </p>
             <p className="text-black">
-              Center No.: <span className="text-black ml-2">CenterNo</span>
+              Center No.:{" "}
+              <span className="text-black ml-2">
+                {fetched_SSCE_Grade_State?.centerNo ?? ""}
+              </span>
             </p>
             <p className="text-black">
-              Exam No.: <span className="text-black ml-2">ExamNo</span>
+              Exam No.:{" "}
+              <span className="text-black ml-2">
+                {fetched_SSCE_Grade_State?.examNo ?? ""}
+              </span>
             </p>
           </div>
           <table className="w-full mb-20" cellPadding={12}>
@@ -237,39 +394,39 @@ const ApplicationPreview = () => {
             </thead>
             <tr className="border-b">
               <td>English Langaude</td>
-              <td>Subject11</td>
+              <td>{fetched_SSCE_Grade_State?.grade1 ?? ""}</td>
             </tr>
             <tr className="border-b">
               <td>Mathematics</td>
-              <td>Subject22</td>
+              <td>{fetched_SSCE_Grade_State?.grade2 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject3</td>
-              <td>Subject33</td>
+              <td>{fetched_SSCE_Grade_State?.subject3 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade3 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject4</td>
-              <td>Subject44</td>
+              <td>{fetched_SSCE_Grade_State?.subject4 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade4 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject5</td>
-              <td>Subject55</td>
+              <td>{fetched_SSCE_Grade_State?.subject5 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade5 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject6</td>
-              <td>Subject66</td>
+              <td>{fetched_SSCE_Grade_State?.subject6 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade6 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject7</td>
-              <td>Subject77</td>
+              <td>{fetched_SSCE_Grade_State?.subject7 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade7 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject8</td>
-              <td>Subject88</td>
+              <td>{fetched_SSCE_Grade_State?.subject8 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade8 ?? ""}</td>
             </tr>
             <tr className="border-b">
-              <td>Subject9</td>
-              <td>Subject99</td>
+              <td>{fetched_SSCE_Grade_State?.subject9 ?? ""}</td>
+              <td>{fetched_SSCE_Grade_State?.grade9 ?? ""}</td>
             </tr>
           </table>
         </div>
@@ -279,57 +436,84 @@ const ApplicationPreview = () => {
           <div className="flex flex-col gap-1">
             <p className="text-black">
               Have you ever served in the Armed Forces or any other security
-              agency?: <span className="ml-2 text-black">Question1</span>
+              agency?:{" "}
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question1 ?? ""}
+              </span>
             </p>
             <p className="text-black">
               Reason for leaving:{" "}
-              <span className="ml-2 text-black">Question11</span>
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question1_Reason ?? ""}
+              </span>
             </p>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-black">
               Do you have any Job Experience?:{" "}
-              <span className="ml-2 text-black">Question2</span>{" "}
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question2 ?? ""}
+              </span>{" "}
             </p>
             <p className="text-black">
               Reason for leaving:{" "}
-              <span className="ml-2 text-black">Question21</span>
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question2_Reason ?? ""}
+              </span>
             </p>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-black">
               Have you ever been detained by the Police?:{" "}
-              <span className="text-black ml-2">Question3</span>
+              <span className="text-black ml-2">
+                {fetched_Additional_Info_State?.question3 ?? ""}
+              </span>
             </p>
             <p className="text-black">
-              Reason: <span className="text-black ml-2">Question31</span>
+              Reason:{" "}
+              <span className="text-black ml-2">
+                {fetched_Additional_Info_State?.question3_Reason ?? ""}
+              </span>
             </p>
             <p className="text-black">
               Duration of detention:{" "}
-              <span className="text-black ml-2">Question32</span>
+              <span className="text-black ml-2">
+                {fetched_Additional_Info_State?.question3_Duration ?? ""}
+              </span>
             </p>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-black">
               Have you ever been convicted by a Court of Law?:{" "}
-              <span className="ml-2 text-black">Question4</span>
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question4 ?? ""}
+              </span>
             </p>
             <p className="text-black">
               Reason for leaving:{" "}
-              <span className="ml-2 text-black">Question41</span>
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question4_Reason ?? ""}
+              </span>
             </p>
             <p className="text-black">
-              Conviction: <span className="ml-2 text-black">Question42</span>
+              Conviction:{" "}
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question4_Conviction ?? ""}
+              </span>
             </p>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-black">
               Have you ever travelled out of the country?:{" "}
-              <span className="ml-2 text-black">Question5</span>
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question5 ?? ""}
+              </span>
             </p>
             <p className="text-black">
               Travel details:{" "}
-              <span className="ml-2 text-black">Question51</span>
+              <span className="ml-2 text-black">
+                {fetched_Additional_Info_State?.question5_Reason ?? ""}
+              </span>
             </p>
           </div>
         </div>
@@ -341,31 +525,55 @@ const ApplicationPreview = () => {
         <h2 className="text-3xl font-bold my-5">#1</h2>
         <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-10">
           <p className="text-black">
-            Full Name: <span className="ml-2">Relative1FullName</span>
+            Full Name:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative1_Name ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Last Rank: <span className="ml-2">Relative1LastRank</span>
+            Last Rank:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative1_LastRank ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Force: <span className="ml-2">Relative1Force</span>
+            Force:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative1_Force ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Still in service: <span className="ml-2">Relative1InService</span>
+            Still in service:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative1_StillInService ?? ""}
+            </span>
           </p>
         </div>
         <h2 className="text-3xl font-bold my-5">#2</h2>
         <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-10">
           <p className="text-black">
-            Full Name: <span className="ml-2">Relative2FullName</span>
+            Full Name:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative2_Name ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Last Rank: <span className="ml-2">Relative2LastRank</span>
+            Last Rank:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative2_LastRank ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Force: <span className="ml-2">Relative2Force</span>
+            Force:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative2_Force ?? ""}
+            </span>
           </p>
           <p className="text-black">
-            Still in service: <span className="ml-2">Relative2InService</span>
+            Still in service:{" "}
+            <span className="ml-2">
+              {fetched_Additional_Info_State?.Relative2_StillInService ?? ""}
+            </span>
           </p>
         </div>
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-5">

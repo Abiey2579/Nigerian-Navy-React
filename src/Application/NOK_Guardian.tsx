@@ -2,7 +2,13 @@ import ApplicationSteps from "./components/ApplicationSteps";
 import Navbar from "./components/Navbar";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  save_NOK_Guardian,
+  fetch_NOK_Guardian,
+} from "../Asset/config/functions";
+import { account } from "../Asset/config/appwrite";
+import * as Model from "../Asset/model/model";
 
 const NOKGuardian = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -28,9 +34,12 @@ const NOKGuardian = () => {
   const [refereeAddress3, setRefereeAddress3] = useState<string>("");
   const [refereePhone3, setRefereePhone3] = useState<string>("");
 
-  const navigate = useNavigate();
+  // FETCHED NOK GUARDIAN STATE
+  const [fetched_NOK_Guardian_State, set_fetched_NOK_Guardian_State] =
+    useState<Model.NOK_Guardian>();
 
-  const handleNext = () => {
+  const navigate = useNavigate();
+  const handleNext = async () => {
     try {
       if (
         fullName.trim() === "" ||
@@ -51,7 +60,33 @@ const NOKGuardian = () => {
       ) {
         return;
       }
-      navigate(uriPaths.EDUCATION);
+
+      const promise = await save_NOK_Guardian({
+        fullName: fullName,
+        occupation: occupation,
+        post: post,
+        email: email,
+        relationShip: relationShip,
+        mobileNumber: mobileNumber,
+        contactAddress: contactAddress,
+        parentFullName: parentFullName,
+        parentResidentialAddress: parentResidentialAddress,
+
+        refereeName1: refereeName1,
+        refereeAddress1: refereeAddress1,
+        refereePhone1: refereePhone1,
+
+        refereeName2: refereeName2,
+        refereeAddress2: refereeAddress2,
+        refereePhone2: refereePhone2,
+
+        refereeName3: refereeName3,
+        refereeAddress3: refereeAddress3,
+        refereePhone3: refereePhone3,
+      });
+
+      console.log(promise);
+      // navigate(uriPaths.EDUCATION);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -60,6 +95,28 @@ const NOKGuardian = () => {
   const handlePrevious = () => {
     navigate(uriPaths.BIODATA);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const promise = await account.getSession("current");
+        if (promise.userId) {
+          const fetched_NOK_Guardian = await fetch_NOK_Guardian(promise.userId);
+          if (fetched_NOK_Guardian) {
+            set_fetched_NOK_Guardian_State(fetched_NOK_Guardian);
+          }
+        } else {
+          await account.deleteSessions().finally(() => {
+            navigate(uriPaths.LOGIN);
+          });
+        }
+      } catch (error) {
+        navigate(uriPaths.LOGIN);
+      }
+    };
+
+    // fetchData();
+  }, [fetched_NOK_Guardian_State]);
 
   return (
     <>
@@ -78,7 +135,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setFullName(e.target.value)}
-                value={fullName}
+                value={fetched_NOK_Guardian_State?.fullName ?? fullName}
               />
             </div>
             <div className="flex flex-col">
@@ -90,7 +147,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setOccupation(e.target.value)}
-                value={occupation}
+                value={fetched_NOK_Guardian_State?.occupation ?? occupation}
               />
             </div>
             <div className="flex flex-col">
@@ -102,7 +159,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPost(e.target.value)}
-                value={post}
+                value={fetched_NOK_Guardian_State?.post ?? post}
               />
             </div>
             <div className="flex flex-col">
@@ -114,7 +171,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                value={fetched_NOK_Guardian_State?.email ?? email}
               />
             </div>
             <div className="flex flex-col">
@@ -126,7 +183,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRelationShip(e.target.value)}
-                value={relationShip}
+                value={fetched_NOK_Guardian_State?.relationShip ?? relationShip}
               />
             </div>
             <div className="flex flex-col">
@@ -138,7 +195,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setMobileNumber(e.target.value)}
-                value={mobileNumber}
+                value={fetched_NOK_Guardian_State?.mobileNumber ?? mobileNumber}
               />
             </div>
             <div className="flex flex-col">
@@ -150,7 +207,9 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setContactAddress(e.target.value)}
-                value={contactAddress}
+                value={
+                  fetched_NOK_Guardian_State?.contactAddress ?? contactAddress
+                }
               />
             </div>
           </div>
@@ -166,6 +225,9 @@ const NOKGuardian = () => {
                 type="text"
                 className="border p-2 rounded outline-0"
                 required
+                value={
+                  fetched_NOK_Guardian_State?.parentFullName ?? parentFullName
+                }
               />
             </div>
             <div className="flex flex-col">
@@ -176,6 +238,10 @@ const NOKGuardian = () => {
                 type="text"
                 className="border p-2 rounded outline-0"
                 required
+                value={
+                  fetched_NOK_Guardian_State?.parentResidentialAddress ??
+                  parentResidentialAddress
+                }
               />
             </div>
           </div>
@@ -191,7 +257,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRefereeName1(e.target.value)}
-                value={refereeName1}
+                value={fetched_NOK_Guardian_State?.refereeName1 ?? refereeName1}
               />
             </div>
             <div className="flex flex-col">
@@ -203,7 +269,9 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRefereeAddress1(e.target.value)}
-                value={refereeAddress1}
+                value={
+                  fetched_NOK_Guardian_State?.refereeAddress1 ?? refereeAddress1
+                }
               />
             </div>
             <div className="flex flex-col">
@@ -215,7 +283,9 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRefereePhone1(e.target.value)}
-                value={refereePhone1}
+                value={
+                  fetched_NOK_Guardian_State?.refereePhone1 ?? refereePhone1
+                }
               />
             </div>
           </div>
@@ -230,7 +300,7 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRefereeName2(e.target.value)}
-                value={refereeName2}
+                value={fetched_NOK_Guardian_State?.refereeName2 ?? refereeName2}
               />
             </div>
             <div className="flex flex-col">
@@ -242,7 +312,9 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRefereeAddress2(e.target.value)}
-                value={refereeAddress2}
+                value={
+                  fetched_NOK_Guardian_State?.refereeAddress2 ?? refereeAddress2
+                }
               />
             </div>
             <div className="flex flex-col">
@@ -254,7 +326,9 @@ const NOKGuardian = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setRefereePhone2(e.target.value)}
-                value={refereePhone2}
+                value={
+                  fetched_NOK_Guardian_State?.refereePhone2 ?? refereePhone2
+                }
               />
             </div>
           </div>
@@ -265,7 +339,7 @@ const NOKGuardian = () => {
               <input
                 type="text"
                 onChange={(e) => setRefereeName3(e.target.value)}
-                value={refereeName3}
+                value={fetched_NOK_Guardian_State?.refereeName3 ?? refereeName3}
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -274,7 +348,9 @@ const NOKGuardian = () => {
               <input
                 type="text"
                 onChange={(e) => setRefereeAddress3(e.target.value)}
-                value={refereeAddress3}
+                value={
+                  fetched_NOK_Guardian_State?.refereeAddress3 ?? refereeAddress3
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -283,7 +359,9 @@ const NOKGuardian = () => {
               <input
                 type="text"
                 onChange={(e) => setRefereePhone3(e.target.value)}
-                value={refereePhone3}
+                value={
+                  fetched_NOK_Guardian_State?.refereePhone3 ?? refereePhone3
+                }
                 className="border p-2 rounded outline-0 "
               />
             </div>

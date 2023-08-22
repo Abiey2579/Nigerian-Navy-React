@@ -2,7 +2,13 @@ import ApplicationSteps from "./components/ApplicationSteps";
 import Navbar from "./components/Navbar";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  save_Education_Info,
+  fetch_Education_Info,
+} from "../Asset/config/functions";
+import { account } from "../Asset/config/appwrite";
+import * as Model from "../Asset/model/model";
 
 const EducationInfo = () => {
   const [primary, setPrimary] = useState<string>("");
@@ -22,8 +28,12 @@ const EducationInfo = () => {
   const [institutionFrom, setInstitutionFrom] = useState<string>("");
   const [institutionTo, setInstitutionTo] = useState<string>("");
 
+  // FETCHED EDUCATION INFO STATE
+  const [fetched_Education_Info_State, set_fetched_Education_Info_State] =
+    useState<Model.Education_Info>();
+
   const navigate = useNavigate();
-  const handleNext = () => {
+  const handleNext = async () => {
     try {
       if (
         primary.trim() === "" ||
@@ -36,7 +46,26 @@ const EducationInfo = () => {
       ) {
         return;
       }
-      navigate(uriPaths.SSCE);
+
+      const promise = await save_Education_Info({
+        primary: primary,
+        primaryFrom: primaryFrom,
+        primaryTo: primaryTo,
+
+        secondary: secondary,
+        secondaryQualification: secondaryQualification,
+        secondaryFrom: secondaryFrom,
+        secondaryTo: secondaryTo,
+
+        institution: institution,
+        courseOfStudy: courseOfStudy,
+        institutionQualification: institutionQualification,
+        institutionFrom: institutionFrom,
+        institutionTo: institutionTo,
+      });
+
+      console.log(promise);
+      // navigate(uriPaths.SSCE);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -45,6 +74,31 @@ const EducationInfo = () => {
   const handlePrevious = () => {
     navigate(uriPaths.NOK);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const promise = await account.getSession("current");
+        if (promise.userId) {
+          const fetched_Education_Info = await fetch_Education_Info(
+            promise.userId
+          );
+          if (fetched_Education_Info) {
+            set_fetched_Education_Info_State(fetched_Education_Info);
+          }
+        } else {
+          await account.deleteSessions().finally(() => {
+            navigate(uriPaths.LOGIN);
+          });
+        }
+      } catch (error) {
+        navigate(uriPaths.LOGIN);
+      }
+    };
+
+    // fetchData();
+  }, [fetched_Education_Info_State]);
+
   return (
     <>
       <Navbar />
@@ -62,7 +116,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPrimary(e.target.value)}
-                value={primary}
+                value={fetched_Education_Info_State?.primary ?? primary}
               />
             </div>
             <div className="flex flex-col">
@@ -74,7 +128,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPrimaryFrom(e.target.value)}
-                value={primaryFrom}
+                value={fetched_Education_Info_State?.primaryFrom ?? primaryFrom}
               />
             </div>
             <div className="flex flex-col">
@@ -86,7 +140,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPrimaryTo(e.target.value)}
-                value={primaryTo}
+                value={fetched_Education_Info_State?.primaryTo ?? primaryTo}
               />
             </div>
           </div>
@@ -101,7 +155,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setSecondary(e.target.value)}
-                value={secondary}
+                value={fetched_Education_Info_State?.secondary ?? secondary}
               />
             </div>
             <div className="flex flex-col">
@@ -110,7 +164,10 @@ const EducationInfo = () => {
               </label>
               <select
                 onChange={(e) => setSecondaryQualification(e.target.value)}
-                value={secondaryQualification}
+                value={
+                  fetched_Education_Info_State?.secondaryQualification ??
+                  secondaryQualification
+                }
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -130,7 +187,9 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setSecondaryFrom(e.target.value)}
-                value={secondaryFrom}
+                value={
+                  fetched_Education_Info_State?.secondaryFrom ?? secondaryFrom
+                }
               />
             </div>
             <div className="flex flex-col">
@@ -142,7 +201,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setSecondaryTo(e.target.value)}
-                value={secondaryTo}
+                value={fetched_Education_Info_State?.secondaryTo ?? secondaryTo}
               />
             </div>
           </div>
@@ -153,7 +212,7 @@ const EducationInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setInstitution(e.target.value)}
-                value={institution}
+                value={fetched_Education_Info_State?.institution ?? institution}
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -162,7 +221,9 @@ const EducationInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setCourseOfStudy(e.target.value)}
-                value={courseOfStudy}
+                value={
+                  fetched_Education_Info_State?.courseOfStudy ?? courseOfStudy
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -170,7 +231,10 @@ const EducationInfo = () => {
               <label>Qualification</label>
               <select
                 onChange={(e) => setInstitutionQualification(e.target.value)}
-                value={institutionQualification}
+                value={
+                  fetched_Education_Info_State?.institutionQualification ??
+                  institutionQualification
+                }
                 className="border p-2 rounded outline-0"
               >
                 <option value=""></option>
@@ -186,7 +250,10 @@ const EducationInfo = () => {
               <input
                 type="date"
                 onChange={(e) => setInstitutionFrom(e.target.value)}
-                value={institutionFrom}
+                value={
+                  fetched_Education_Info_State?.institutionFrom ??
+                  institutionFrom
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -195,7 +262,9 @@ const EducationInfo = () => {
               <input
                 type="date"
                 onChange={(e) => setInstitutionTo(e.target.value)}
-                value={institutionTo}
+                value={
+                  fetched_Education_Info_State?.institutionTo ?? institutionTo
+                }
                 className="border p-2 rounded outline-0"
               />
             </div>

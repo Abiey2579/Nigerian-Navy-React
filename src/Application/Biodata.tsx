@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import * as Model from "../Asset/model/model";
 import {
   Department,
   ExamCenter,
@@ -12,7 +13,9 @@ import {
 import ApplicationSteps from "./components/ApplicationSteps";
 import Navbar from "./components/Navbar";
 import * as uriPaths from "../Asset/common/uriPaths";
+import { save_Biodata, fetch_Biodata } from "../Asset/config/functions";
 import { useNavigate } from "react-router-dom";
+import { account } from "../Asset/config/appwrite";
 
 const Biodata = () => {
   const [title, setTitle] = useState<string>("");
@@ -37,6 +40,10 @@ const Biodata = () => {
   const [tribalMarks, setTribalMarks] = useState<string>("");
   const [permanentAddress, setPermanentAddress] = useState<string>("");
   const [contactAddress, setContactAddress] = useState<string>("");
+
+  // FETCHED BIODATA STATE
+  const [fetched_Biodata_State, set_fetched_Biodata_State] =
+    useState<Model.Biodata>();
 
   const navigate = useNavigate();
   const handleNext = async () => {
@@ -65,12 +72,59 @@ const Biodata = () => {
         return;
       }
 
+      const promise = await save_Biodata({
+        title: title,
+        surName: surName,
+        firstName: firstName,
+        otherName: otherName,
+        religion: religion,
+        maritalStatus: maritalStatus,
+        NoOfChildren: NoOfChildren,
+        DOB: DOB,
+        gender: gender,
+        height: height,
+        stateOfOrigin: stateOfOrigin,
+        LGA: LGA,
+        homeTown: homeTown,
+        examCenter: examCenter,
+        mobileNumber: mobileNumber,
+        NIN: NIN,
+        tattoo: tattoo,
+        hobbies: hobbies,
+        department: department,
+        tribalMarks: tribalMarks,
+        permanentAddress: permanentAddress,
+        contactAddress: contactAddress,
+      });
+
+      console.log(promise);
       // navigate(uriPaths.NOK);
-      alert("Saved");
     } catch (error) {
       throw new Error((error as Error).message);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const promise = await account.getSession("current");
+        if (promise.userId) {
+          const fetched_Biodata = await fetch_Biodata(promise.userId);
+          if (fetched_Biodata) {
+            set_fetched_Biodata_State(fetched_Biodata);
+          }
+        } else {
+          await account.deleteSessions().finally(() => {
+            navigate(uriPaths.LOGIN);
+          });
+        }
+      } catch (error) {
+        navigate(uriPaths.LOGIN);
+      }
+    };
+
+    // fetchData();
+  }, [fetched_Biodata_State]);
 
   return (
     <>
@@ -100,7 +154,7 @@ const Biodata = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setTitle(e.target.value)}
-                value={title}
+                value={fetched_Biodata_State?.title ?? title}
               >
                 <option value=""></option>
                 {Title.map((option) => (
@@ -116,7 +170,7 @@ const Biodata = () => {
                 type="text"
                 className="border p-2 rounded outline-0"
                 onChange={(e) => setSurName(e.target.value)}
-                value={surName}
+                value={fetched_Biodata_State?.surName ?? surName}
                 required
               />
             </div>
@@ -127,7 +181,7 @@ const Biodata = () => {
               <input
                 type="text"
                 onChange={(e) => setFirstName(e.target.value)}
-                value={firstName}
+                value={fetched_Biodata_State?.firstName ?? firstName}
                 className="border p-2 rounded outline-0"
                 required
               />
@@ -138,7 +192,7 @@ const Biodata = () => {
                 type="text"
                 className="border p-2 rounded outline-0"
                 onChange={(e) => setOtherName(e.target.value)}
-                value={otherName}
+                value={fetched_Biodata_State?.otherName ?? otherName}
               />
             </div>
             <div className="flex flex-col">
@@ -147,7 +201,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setReligion(e.target.value)}
-                value={religion}
+                value={fetched_Biodata_State?.religion ?? religion}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -163,7 +217,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setMaritalStatus(e.target.value)}
-                value={maritalStatus}
+                value={fetched_Biodata_State?.maritalStatus ?? maritalStatus}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -180,7 +234,7 @@ const Biodata = () => {
               <input
                 type="number"
                 onChange={(e) => setNoOfChildren(e.target.value)}
-                value={NoOfChildren}
+                value={fetched_Biodata_State?.NoOfChildren ?? NoOfChildren}
                 className="border p-2 rounded outline-0"
                 required
               />
@@ -192,7 +246,7 @@ const Biodata = () => {
               <input
                 type="date"
                 onChange={(e) => setDOB(e.target.value)}
-                value={DOB}
+                value={fetched_Biodata_State?.DOB ?? DOB}
                 className="border p-2 rounded outline-0"
                 required
               />
@@ -203,7 +257,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setGender(e.target.value)}
-                value={gender}
+                value={fetched_Biodata_State?.gender ?? gender}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -222,7 +276,7 @@ const Biodata = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setHeight(e.target.value)}
-                value={height}
+                value={fetched_Biodata_State?.height ?? height}
               />
             </div>
             <div className="flex flex-col">
@@ -234,7 +288,7 @@ const Biodata = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setStateOfOrigin(e.target.value)}
-                value={stateOfOrigin}
+                value={fetched_Biodata_State?.stateOfOrigin ?? stateOfOrigin}
               >
                 <option value=""></option>
                 {StateOfOrigin.map((option) => (
@@ -251,7 +305,7 @@ const Biodata = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setLGA(e.target.value)}
-                value={LGA}
+                value={fetched_Biodata_State?.LGA ?? LGA}
               />
             </div>
             <div className="flex flex-col">
@@ -259,7 +313,7 @@ const Biodata = () => {
               <input
                 type="text"
                 onChange={(e) => setHomeTown(e.target.value)}
-                value={homeTown}
+                value={fetched_Biodata_State?.homeTown ?? homeTown}
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -269,7 +323,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setExamCenter(e.target.value)}
-                value={examCenter}
+                value={fetched_Biodata_State?.examCenter ?? examCenter}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -287,7 +341,7 @@ const Biodata = () => {
                 type="text"
                 className="border p-2 rounded outline-0"
                 onChange={(e) => setMobileNumber(e.target.value)}
-                value={mobileNumber}
+                value={fetched_Biodata_State?.mobileNumber ?? mobileNumber}
                 required
               />
             </div>
@@ -299,7 +353,7 @@ const Biodata = () => {
               <input
                 type="number"
                 onChange={(e) => setNIN(e.target.value)}
-                value={NIN}
+                value={fetched_Biodata_State?.NIN ?? NIN}
                 className="border p-2 rounded outline-0"
                 required
               />
@@ -309,7 +363,7 @@ const Biodata = () => {
               <input
                 type="text"
                 onChange={(e) => setHobbies(e.target.value)}
-                value={hobbies}
+                value={fetched_Biodata_State?.hobbies ?? hobbies}
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -331,7 +385,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setTattoo(e.target.value)}
-                value={tattoo}
+                value={fetched_Biodata_State?.tattoo ?? tattoo}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -346,7 +400,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setDepartment(e.target.value)}
-                value={department}
+                value={fetched_Biodata_State?.department ?? department}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -368,7 +422,7 @@ const Biodata = () => {
               </label>
               <select
                 onChange={(e) => setTribalMarks(e.target.value)}
-                value={tribalMarks}
+                value={fetched_Biodata_State?.tribalMarks ?? tribalMarks}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -383,7 +437,9 @@ const Biodata = () => {
               </label>
               <textarea
                 onChange={(e) => setPermanentAddress(e.target.value)}
-                value={permanentAddress}
+                value={
+                  fetched_Biodata_State?.permanentAddress ?? permanentAddress
+                }
                 className="border p-2 rounded outline-0"
                 required
               ></textarea>
@@ -394,7 +450,7 @@ const Biodata = () => {
               </label>
               <textarea
                 onChange={(e) => setContactAddress(e.target.value)}
-                value={contactAddress}
+                value={fetched_Biodata_State?.contactAddress ?? contactAddress}
                 className="border p-2 rounded outline-0"
                 required
               ></textarea>

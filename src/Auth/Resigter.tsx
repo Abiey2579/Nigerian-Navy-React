@@ -6,13 +6,17 @@ import "../Asset/css/register.css";
 import { Link } from "react-router-dom";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { account } from "../Asset/config/appwrite";
+import { ID } from "appwrite";
 
 const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const navigate = useNavigate();
 
-  const handleRegister = (e: FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email && !password && !confirmPassword) {
       alert("All Fields are Required");
@@ -25,7 +29,12 @@ const Register = () => {
     }
 
     try {
-      // send to MongoDB
+      const promise = await account.create(ID.unique(), email, password);
+      if (promise.$createdAt) {
+        navigate(uriPaths.BIODATA);
+      } else {
+        alert("Incorrect Email or Password");
+      }
     } catch (error) {
       throw new Error((error as Error).message);
     }
