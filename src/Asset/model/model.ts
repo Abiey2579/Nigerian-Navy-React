@@ -161,3 +161,7 @@ export interface Additional_Info {
   Relative2_Force?: string;
   Relative2_StillInService?: string;
 }
+
+export interface Applicant_ID {
+  application_id?: string;
+}

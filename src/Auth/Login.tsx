@@ -22,14 +22,11 @@ const Login = () => {
     }
 
     try {
-      const promise = await account.createEmailSession(email, password);
-      if (promise.userId) {
-        navigate(uriPaths.BIODATA);
-      } else {
-        alert("Incorrect Email or Password");
-      }
+      await account.createEmailSession(email, password);
+      navigate(uriPaths.BIODATA);
     } catch (error) {
-      throw new Error((error as Error).message);
+      alert("Incorrect Email or Password");
+      // throw new Error((error as Error).message);
     }
   };
   return (
@@ -63,6 +60,7 @@ const Login = () => {
               required
               onChange={(e) => setEmail(e.target.value)}
               value={email}
+              autoComplete="username"
             />
             <input
               type="password"
@@ -71,6 +69,7 @@ const Login = () => {
               required
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              autoComplete="current-password"
             />
             <button className="Login_BTN">Log In</button>
 

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import {
   save_Education_Info,
   fetch_Education_Info,
+  fetch_Application_ID,
 } from "../Asset/config/functions";
 import { account } from "../Asset/config/appwrite";
 import * as Model from "../Asset/model/model";
@@ -28,6 +29,9 @@ const EducationInfo = () => {
   const [institutionFrom, setInstitutionFrom] = useState<string>("");
   const [institutionTo, setInstitutionTo] = useState<string>("");
 
+  const [uid, setUID] = useState<string>("");
+  const [providerUid, setProviderUid] = useState<string>("");
+
   // FETCHED EDUCATION INFO STATE
   const [fetched_Education_Info_State, set_fetched_Education_Info_State] =
     useState<Model.Education_Info>();
@@ -44,28 +48,31 @@ const EducationInfo = () => {
         secondaryFrom.trim() === "" ||
         secondaryTo.trim() === ""
       ) {
+        alert("Fill the required fields");
         return;
       }
 
-      const promise = await save_Education_Info({
-        primary: primary,
-        primaryFrom: primaryFrom,
-        primaryTo: primaryTo,
+      await save_Education_Info(
+        {
+          primary: primary,
+          primaryFrom: primaryFrom,
+          primaryTo: primaryTo,
 
-        secondary: secondary,
-        secondaryQualification: secondaryQualification,
-        secondaryFrom: secondaryFrom,
-        secondaryTo: secondaryTo,
+          secondary: secondary,
+          secondaryQualification: secondaryQualification,
+          secondaryFrom: secondaryFrom,
+          secondaryTo: secondaryTo,
 
-        institution: institution,
-        courseOfStudy: courseOfStudy,
-        institutionQualification: institutionQualification,
-        institutionFrom: institutionFrom,
-        institutionTo: institutionTo,
-      });
+          institution: institution,
+          courseOfStudy: courseOfStudy,
+          institutionQualification: institutionQualification,
+          institutionFrom: institutionFrom,
+          institutionTo: institutionTo,
+        },
+        uid
+      );
 
-      console.log(promise);
-      // navigate(uriPaths.SSCE);
+      navigate(uriPaths.SSCE);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -80,6 +87,12 @@ const EducationInfo = () => {
       try {
         const promise = await account.getSession("current");
         if (promise.userId) {
+          setUID(promise.userId);
+          setProviderUid(promise.providerUid);
+          const application_id = await fetch_Application_ID(promise.userId);
+          if (application_id) {
+            navigate(uriPaths.PRINT_APPLICATION);
+          }
           const fetched_Education_Info = await fetch_Education_Info(
             promise.userId
           );
@@ -96,15 +109,38 @@ const EducationInfo = () => {
       }
     };
 
-    // fetchData();
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (fetched_Education_Info_State) {
+      setPrimary(fetched_Education_Info_State?.primary ?? "");
+      setPrimaryFrom(fetched_Education_Info_State?.primaryFrom ?? "");
+      setPrimaryTo(fetched_Education_Info_State?.primaryTo ?? "");
+
+      setSecondary(fetched_Education_Info_State?.secondary ?? "");
+      setSecondaryQualification(
+        fetched_Education_Info_State?.secondaryQualification ?? ""
+      );
+      setSecondaryFrom(fetched_Education_Info_State?.secondaryFrom ?? "");
+      setSecondaryTo(fetched_Education_Info_State?.secondaryTo ?? "");
+
+      setInstitution(fetched_Education_Info_State?.institution ?? "");
+      setCourseOfStudy(fetched_Education_Info_State?.courseOfStudy ?? "");
+      setInstitutionQualification(
+        fetched_Education_Info_State?.institutionQualification ?? ""
+      );
+      setInstitutionFrom(fetched_Education_Info_State?.institutionFrom ?? "");
+      setInstitutionTo(fetched_Education_Info_State?.institutionTo ?? "");
+    }
   }, [fetched_Education_Info_State]);
 
   return (
     <>
-      <Navbar />
+      <Navbar email={providerUid} />
       <ApplicationSteps />
       <section className="lg:px-24 md:px-10 px-3 mt-5 mb-5 ">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <h2 className="text-3xl font-bold mb-5">Primary School</h2>
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
             <div className="flex flex-col">
@@ -116,7 +152,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPrimary(e.target.value)}
-                value={fetched_Education_Info_State?.primary ?? primary}
+                value={primary}
               />
             </div>
             <div className="flex flex-col">
@@ -128,7 +164,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPrimaryFrom(e.target.value)}
-                value={fetched_Education_Info_State?.primaryFrom ?? primaryFrom}
+                value={primaryFrom}
               />
             </div>
             <div className="flex flex-col">
@@ -140,7 +176,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setPrimaryTo(e.target.value)}
-                value={fetched_Education_Info_State?.primaryTo ?? primaryTo}
+                value={primaryTo}
               />
             </div>
           </div>
@@ -155,7 +191,7 @@ const EducationInfo = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setSecondary(e.target.value)}
-                value={fetched_Education_Info_State?.secondary ?? secondary}
+                value={secondary}
               />
             </div>
             <div className="flex flex-col">
@@ -164,10 +200,7 @@ const EducationInfo = () => {
               </label>
               <select
                 onChange={(e) => setSecondaryQualification(e.target.value)}
-                value={
-                  fetched_Education_Info_State?.secondaryQualification ??
-                  secondaryQualification
-                }
+                value={secondaryQualification}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -183,13 +216,11 @@ const EducationInfo = () => {
                 From <span className="text-red-400">*</span>
               </label>
               <input
-                type="date"
+                type="number"
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setSecondaryFrom(e.target.value)}
-                value={
-                  fetched_Education_Info_State?.secondaryFrom ?? secondaryFrom
-                }
+                value={secondaryFrom}
               />
             </div>
             <div className="flex flex-col">
@@ -197,11 +228,11 @@ const EducationInfo = () => {
                 To <span className="text-red-400">*</span>
               </label>
               <input
-                type="date"
+                type="number"
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setSecondaryTo(e.target.value)}
-                value={fetched_Education_Info_State?.secondaryTo ?? secondaryTo}
+                value={secondaryTo}
               />
             </div>
           </div>
@@ -212,7 +243,7 @@ const EducationInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setInstitution(e.target.value)}
-                value={fetched_Education_Info_State?.institution ?? institution}
+                value={institution}
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -221,9 +252,7 @@ const EducationInfo = () => {
               <input
                 type="text"
                 onChange={(e) => setCourseOfStudy(e.target.value)}
-                value={
-                  fetched_Education_Info_State?.courseOfStudy ?? courseOfStudy
-                }
+                value={courseOfStudy}
                 className="border p-2 rounded outline-0"
               />
             </div>
@@ -231,10 +260,7 @@ const EducationInfo = () => {
               <label>Qualification</label>
               <select
                 onChange={(e) => setInstitutionQualification(e.target.value)}
-                value={
-                  fetched_Education_Info_State?.institutionQualification ??
-                  institutionQualification
-                }
+                value={institutionQualification}
                 className="border p-2 rounded outline-0"
               >
                 <option value=""></option>
@@ -248,23 +274,18 @@ const EducationInfo = () => {
             <div className="flex flex-col">
               <label>From</label>
               <input
-                type="date"
+                type="number"
                 onChange={(e) => setInstitutionFrom(e.target.value)}
-                value={
-                  fetched_Education_Info_State?.institutionFrom ??
-                  institutionFrom
-                }
+                value={institutionFrom}
                 className="border p-2 rounded outline-0"
               />
             </div>
             <div className="flex flex-col">
               <label htmlFor="TertiaryEnd">To</label>
               <input
-                type="date"
+                type="number"
                 onChange={(e) => setInstitutionTo(e.target.value)}
-                value={
-                  fetched_Education_Info_State?.institutionTo ?? institutionTo
-                }
+                value={institutionTo}
                 className="border p-2 rounded outline-0"
               />
             </div>

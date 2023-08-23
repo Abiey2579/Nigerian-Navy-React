@@ -29,14 +29,11 @@ const Register = () => {
     }
 
     try {
-      const promise = await account.create(ID.unique(), email, password);
-      if (promise.$createdAt) {
-        navigate(uriPaths.BIODATA);
-      } else {
-        alert("Incorrect Email or Password");
-      }
+      await account.create(ID.unique(), email, password);
+      navigate(uriPaths.BIODATA);
     } catch (error) {
-      throw new Error((error as Error).message);
+      alert("A user with the same email already exists");
+      // throw new Error((error as Error).message);
     }
   };
   return (
@@ -71,6 +68,7 @@ const Register = () => {
               required
               onChange={(e) => setEmail(e.target.value)}
               value={email}
+              autoComplete="username"
             />
             <input
               type="password"
@@ -79,6 +77,7 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               required
+              autoComplete="new-password"
             />
             <input
               type="password"
@@ -87,6 +86,7 @@ const Register = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               value={confirmPassword}
               required
+              autoComplete="new-password"
             />
             <button className="Register">Register</button>
 

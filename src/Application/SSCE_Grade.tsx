@@ -4,7 +4,11 @@ import Navbar from "./components/Navbar";
 import * as uriPaths from "../Asset/common/uriPaths";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { save_SSCE_Grade, fetch_SSCE_Grade } from "../Asset/config/functions";
+import {
+  save_SSCE_Grade,
+  fetch_SSCE_Grade,
+  fetch_Application_ID,
+} from "../Asset/config/functions";
 import { account } from "../Asset/config/appwrite";
 import * as Model from "../Asset/model/model";
 
@@ -41,6 +45,9 @@ const SSCEGrade = () => {
   const [subject9, setSubject9] = useState<string>("");
   const [grade9, setGrade9] = useState<string>("");
 
+  const [uid, setUID] = useState<string>("");
+  const [providerUid, setProviderUid] = useState<string>("");
+
   // FETCHED SSCE GRADE STATE
   const [fetched_SSCE_Grade_State, set_fetched_SSCE_Grade_State] =
     useState<Model.SSCE_Grade>();
@@ -64,45 +71,48 @@ const SSCEGrade = () => {
         subject5.trim() === "" ||
         grade5.trim() === ""
       ) {
+        alert("Fill the required fields");
         return;
       }
 
-      const promise = await save_SSCE_Grade({
-        examType: examType,
-        NoOfSitting: NoOfSitting,
-        centerNo: centerNo,
-        examNo: examNo,
+      await save_SSCE_Grade(
+        {
+          examType: examType,
+          NoOfSitting: NoOfSitting,
+          centerNo: centerNo,
+          examNo: examNo,
 
-        subject1: subject1,
-        grade1: grade1,
+          subject1: subject1,
+          grade1: grade1,
 
-        subject2: subject2,
-        grade2: grade2,
+          subject2: subject2,
+          grade2: grade2,
 
-        subject3: subject3,
-        grade3: grade3,
+          subject3: subject3,
+          grade3: grade3,
 
-        subject4: subject4,
-        grade4: grade4,
+          subject4: subject4,
+          grade4: grade4,
 
-        subject5: subject5,
-        grade5: grade5,
+          subject5: subject5,
+          grade5: grade5,
 
-        subject6: subject6,
-        grade6: grade6,
+          subject6: subject6,
+          grade6: grade6,
 
-        subject7: subject7,
-        grade7: grade7,
+          subject7: subject7,
+          grade7: grade7,
 
-        subject8: subject8,
-        grade8: grade8,
+          subject8: subject8,
+          grade8: grade8,
 
-        subject9: subject9,
-        grade9: grade9,
-      });
+          subject9: subject9,
+          grade9: grade9,
+        },
+        uid
+      );
 
-      console.log(promise);
-      // navigate(uriPaths.ADDITIONAL_INFO);
+      navigate(uriPaths.ADDITIONAL_INFO);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -117,6 +127,12 @@ const SSCEGrade = () => {
       try {
         const promise = await account.getSession("current");
         if (promise.userId) {
+          setUID(promise.userId);
+          setProviderUid(promise.providerUid);
+          const application_id = await fetch_Application_ID(promise.userId);
+          if (application_id) {
+            navigate(uriPaths.PRINT_APPLICATION);
+          }
           const fetched_SSCE_Grade = await fetch_SSCE_Grade(promise.userId);
           if (fetched_SSCE_Grade) {
             set_fetched_SSCE_Grade_State(fetched_SSCE_Grade);
@@ -131,15 +147,51 @@ const SSCEGrade = () => {
       }
     };
 
-    // fetchData();
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (fetched_SSCE_Grade_State) {
+      setExamType(fetched_SSCE_Grade_State?.examType ?? "");
+      setNoOfSitting(fetched_SSCE_Grade_State?.NoOfSitting ?? "");
+      setCenterNo(fetched_SSCE_Grade_State?.centerNo ?? "");
+      setExamNo(fetched_SSCE_Grade_State?.examNo ?? "");
+
+      setSubject1(fetched_SSCE_Grade_State?.subject1 ?? "");
+      setGrade1(fetched_SSCE_Grade_State?.grade1 ?? "");
+
+      setSubject2(fetched_SSCE_Grade_State?.subject2 ?? "");
+      setGrade2(fetched_SSCE_Grade_State?.grade2 ?? "");
+
+      setSubject3(fetched_SSCE_Grade_State?.subject3 ?? "");
+      setGrade3(fetched_SSCE_Grade_State?.grade3 ?? "");
+
+      setSubject4(fetched_SSCE_Grade_State?.subject4 ?? "");
+      setGrade4(fetched_SSCE_Grade_State?.grade4 ?? "");
+
+      setSubject5(fetched_SSCE_Grade_State?.subject5 ?? "");
+      setGrade5(fetched_SSCE_Grade_State?.grade5 ?? "");
+
+      setSubject6(fetched_SSCE_Grade_State?.subject6 ?? "");
+      setGrade6(fetched_SSCE_Grade_State?.grade6 ?? "");
+
+      setSubject7(fetched_SSCE_Grade_State?.subject7 ?? "");
+      setGrade7(fetched_SSCE_Grade_State?.grade7 ?? "");
+
+      setSubject8(fetched_SSCE_Grade_State?.subject8 ?? "");
+      setGrade8(fetched_SSCE_Grade_State?.grade8 ?? "");
+
+      setSubject9(fetched_SSCE_Grade_State?.subject9 ?? "");
+      setGrade9(fetched_SSCE_Grade_State?.grade9 ?? "");
+    }
   }, [fetched_SSCE_Grade_State]);
 
   return (
     <>
-      <Navbar />
+      <Navbar email={providerUid} />
       <ApplicationSteps />
       <section className="lg:px-24 md:px-10 px-3 mt-5 mb-5">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label>
@@ -147,7 +199,7 @@ const SSCEGrade = () => {
               </label>
               <select
                 onChange={(e) => setExamType(e.target.value)}
-                value={fetched_SSCE_Grade_State?.examType ?? examType}
+                value={examType}
                 className="border p-2 rounded outline-0"
                 required
               >
@@ -167,7 +219,7 @@ const SSCEGrade = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setNoOfSitting(e.target.value)}
-                value={fetched_SSCE_Grade_State?.NoOfSitting ?? NoOfSitting}
+                value={NoOfSitting}
               />
             </div>
             <div className="flex flex-col">
@@ -179,7 +231,7 @@ const SSCEGrade = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setCenterNo(e.target.value)}
-                value={fetched_SSCE_Grade_State?.centerNo ?? centerNo}
+                value={centerNo}
               />
             </div>
             <div className="flex flex-col">
@@ -191,7 +243,7 @@ const SSCEGrade = () => {
                 className="border p-2 rounded outline-0"
                 required
                 onChange={(e) => setExamNo(e.target.value)}
-                value={fetched_SSCE_Grade_State?.examNo ?? examNo}
+                value={examNo}
               />
             </div>
           </div>
@@ -206,7 +258,7 @@ const SSCEGrade = () => {
             </select>
             <select
               onChange={(e) => setGrade1(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade1 ?? grade1}
+              value={grade1}
               className="border p-2 rounded outline-0"
               required
             >
@@ -224,7 +276,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade2(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade2 ?? grade2}
+              value={grade2}
               className="border p-2 rounded outline-0"
               required
             >
@@ -238,7 +290,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject3(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject3 ?? subject3}
+              value={subject3}
               className="border p-2 rounded outline-0"
               required
             >
@@ -250,7 +302,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade3(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade3 ?? grade3}
+              value={grade3}
               className="border p-2 rounded outline-0"
               required
             >
@@ -264,7 +316,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject4(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject4 ?? subject4}
+              value={subject4}
               className="border p-2 rounded outline-0"
               required
             >
@@ -276,7 +328,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade4(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade4 ?? grade4}
+              value={grade4}
               className="border p-2 rounded outline-0"
               required
             >
@@ -290,7 +342,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject5(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject5 ?? subject5}
+              value={subject5}
               className="border p-2 rounded outline-0"
               required
             >
@@ -302,7 +354,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade5(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade5 ?? grade5}
+              value={grade5}
               className="border p-2 rounded outline-0"
               required
             >
@@ -316,7 +368,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject6(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject6 ?? subject6}
+              value={subject6}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -327,7 +379,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade6(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade6 ?? grade6}
+              value={grade6}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -340,7 +392,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject7(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject7 ?? subject7}
+              value={subject7}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -351,7 +403,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade7(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade7 ?? grade7}
+              value={grade7}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -364,7 +416,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject8(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject8 ?? subject8}
+              value={subject8}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -375,7 +427,7 @@ const SSCEGrade = () => {
 
             <select
               onChange={(e) => setGrade8(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade8 ?? grade8}
+              value={grade8}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -388,7 +440,7 @@ const SSCEGrade = () => {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <select
               onChange={(e) => setSubject9(e.target.value)}
-              value={fetched_SSCE_Grade_State?.subject9 ?? subject9}
+              value={subject9}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>
@@ -398,7 +450,7 @@ const SSCEGrade = () => {
             </select>
             <select
               onChange={(e) => setGrade9(e.target.value)}
-              value={fetched_SSCE_Grade_State?.grade9 ?? grade9}
+              value={grade9}
               className="border p-2 rounded outline-0"
             >
               <option value=""></option>

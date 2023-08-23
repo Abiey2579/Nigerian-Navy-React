@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import * as uriPaths from "../Asset/common/uriPaths";
 import Navbar from "./components/Navbar";
 import ApplicationSteps from "./components/ApplicationSteps";
@@ -10,6 +9,8 @@ import {
   fetch_Education_Info,
   fetch_SSCE_Grade,
   fetch_Additional_Info,
+  save_Application_ID,
+  fetch_Application_ID,
 } from "../Asset/config/functions";
 import { account } from "../Asset/config/appwrite";
 import * as Model from "../Asset/model/model";
@@ -35,56 +36,75 @@ const ApplicationPreview = () => {
   const [fetched_Additional_Info_State, set_fetched_Additional_Info_State] =
     useState<Model.Additional_Info>();
 
+  const [uid, setUID] = useState<string>("");
+  const [providerUid, setProviderUid] = useState<string>("");
+
   const navigate = useNavigate();
-  const handleSubmit = () => {
-    navigate(uriPaths.PRINT_APPLICATION);
+
+  const handleSubmit = async () => {
+    try {
+      await save_Application_ID(uid);
+      navigate(uriPaths.PRINT_APPLICATION);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   };
 
   const handlePrevious = () => {
     navigate(uriPaths.ADDITIONAL_INFO);
   };
 
-  const fetch_Preview = async () => {
-    try {
-      const promise = await account.getSession("current");
-      if (promise.userId) {
-        // FETCHING ALL COLLECTIONS
-        const fetched_Biodata = await fetch_Biodata(promise.userId);
-        const fetched_NOK_Guardian = await fetch_NOK_Guardian(promise.userId);
-        const fetched_Education_Info = await fetch_Education_Info(
-          promise.userId
-        );
-        const fetched_SSCE_Grade = await fetch_SSCE_Grade(promise.userId);
-        const fetched_Additional_Info = await fetch_Additional_Info(
-          promise.userId
-        );
+  useEffect(() => {
+    const fetch_Preview = async () => {
+      try {
+        const promise = await account.getSession("current");
+        if (promise.userId) {
+          setUID(promise.userId);
+          setProviderUid(promise.providerUid);
+          const application_id = await fetch_Application_ID(promise.userId);
+          if (application_id) {
+            navigate(uriPaths.PRINT_APPLICATION);
+          }
+          // FETCHING ALL COLLECTIONS
+          const fetched_Biodata = await fetch_Biodata(promise.userId);
+          const fetched_NOK_Guardian = await fetch_NOK_Guardian(promise.userId);
+          const fetched_Education_Info = await fetch_Education_Info(
+            promise.userId
+          );
+          const fetched_SSCE_Grade = await fetch_SSCE_Grade(promise.userId);
+          const fetched_Additional_Info = await fetch_Additional_Info(
+            promise.userId
+          );
 
-        if (
-          fetched_Biodata &&
-          fetched_NOK_Guardian &&
-          fetched_Education_Info &&
-          fetched_SSCE_Grade &&
-          fetched_Additional_Info
-        ) {
-          set_fetched_Biodata_State(fetched_Biodata);
-          set_fetched_NOK_Guardian_State(fetched_NOK_Guardian);
-          set_fetched_Education_Info_State(fetched_Education_Info);
-          set_fetched_SSCE_Grade_State(fetched_SSCE_Grade);
-          set_fetched_Additional_Info_State(fetched_Additional_Info);
+          if (
+            fetched_Biodata &&
+            fetched_NOK_Guardian &&
+            fetched_Education_Info &&
+            fetched_SSCE_Grade &&
+            fetched_Additional_Info
+          ) {
+            set_fetched_Biodata_State(fetched_Biodata);
+            set_fetched_NOK_Guardian_State(fetched_NOK_Guardian);
+            set_fetched_Education_Info_State(fetched_Education_Info);
+            set_fetched_SSCE_Grade_State(fetched_SSCE_Grade);
+            set_fetched_Additional_Info_State(fetched_Additional_Info);
+          }
+        } else {
+          await account.deleteSessions().finally(() => {
+            navigate(uriPaths.LOGIN);
+          });
         }
-      } else {
-        await account.deleteSessions().finally(() => {
-          navigate(uriPaths.LOGIN);
-        });
+      } catch (error) {
+        navigate(uriPaths.LOGIN);
       }
-    } catch (error) {
-      navigate(uriPaths.LOGIN);
-    }
-  };
+    };
+
+    fetch_Preview();
+  }, []);
 
   return (
     <>
-      <Navbar />
+      <Navbar email={providerUid} />
       <ApplicationSteps />
       <section className="lg:px-24 md:px-10 px-3 mt-5 mb-5">
         <h2 className="text-3xl font-bold my-5">Particulars of Candidate</h2>
@@ -161,7 +181,7 @@ const ApplicationPreview = () => {
           <p className="text-black">
             State of Origin:{" "}
             <span className="ml-2 text-black">
-              {fetched_Biodata_State?.stateOfOrigin ?? ""}
+              {fetched_Biodata_State?.stateOfOrigin?.substring(5) ?? ""}
             </span>
           </p>
           <p className="text-black">
@@ -189,7 +209,7 @@ const ApplicationPreview = () => {
             </span>
           </p>
           <p className="text-black">
-            Email: <span className="ml-2 text-black">Email</span>
+            Email: <span className="ml-2 text-black">{providerUid}</span>
           </p>
           <p className="text-black">
             Tattoo/Body Marks:{" "}
@@ -288,20 +308,20 @@ const ApplicationPreview = () => {
             <th>Referee Address</th>
             <th>Referee Phone</th>
           </thead>
-          <tr className="border-b">
-            <th>{fetched_NOK_Guardian_State?.refereeName1 ?? ""}</th>
-            <th>{fetched_NOK_Guardian_State?.refereeAddress1 ?? ""}</th>
-            <th>{fetched_NOK_Guardian_State?.refereePhone1 ?? ""}</th>
+          <tr className="border-b ">
+            <td>{fetched_NOK_Guardian_State?.refereeName1 ?? ""}</td>
+            <td>{fetched_NOK_Guardian_State?.refereeAddress1 ?? ""}</td>
+            <td>{fetched_NOK_Guardian_State?.refereePhone1 ?? ""}</td>
           </tr>
           <tr className="border-b">
-            <th>{fetched_NOK_Guardian_State?.refereeName2 ?? ""}</th>
-            <th>{fetched_NOK_Guardian_State?.refereeAddress2 ?? ""}</th>
-            <th>{fetched_NOK_Guardian_State?.refereePhone2 ?? ""}</th>
+            <td>{fetched_NOK_Guardian_State?.refereeName2 ?? ""}</td>
+            <td>{fetched_NOK_Guardian_State?.refereeAddress2 ?? ""}</td>
+            <td>{fetched_NOK_Guardian_State?.refereePhone2 ?? ""}</td>
           </tr>
           <tr className="border-b">
-            <th>{fetched_NOK_Guardian_State?.refereeName3 ?? ""}</th>
-            <th>{fetched_NOK_Guardian_State?.refereeAddress3 ?? ""}</th>
-            <th>{fetched_NOK_Guardian_State?.refereePhone3 ?? ""}</th>
+            <td>{fetched_NOK_Guardian_State?.refereeName3 ?? ""}</td>
+            <td>{fetched_NOK_Guardian_State?.refereeAddress3 ?? ""}</td>
+            <td>{fetched_NOK_Guardian_State?.refereePhone3 ?? ""}</td>
           </tr>
         </table>
 
@@ -583,18 +603,13 @@ const ApplicationPreview = () => {
           >
             Previous
           </button>
+          <p></p>
           <button
             onClick={handleSubmit}
             className="bg-NAVY_Blue border py-2 px-5 rounded outline-0 text-white"
           >
             Submit Application
           </button>
-          <Link
-            to={uriPaths.PRINT_APPLICATION}
-            className="bg-NAVY_Blue border text-center py-2 px-5 rounded outline-0 text-white"
-          >
-            Print
-          </Link>
         </div>
       </section>
     </>

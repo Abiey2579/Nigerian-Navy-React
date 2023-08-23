@@ -1,59 +1,55 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../css/ApplicationSteps.css";
 
-const ApplicationSteps = (props: any) => {
+const ApplicationSteps = () => {
+  const location = useLocation();
+  const currentRouteIndex = location.pathname.split("/").length - 1;
+  const currentRoute = location.pathname.split("/")[currentRouteIndex];
   return (
     <header className="DashboardNavigator lg:px-24 md:px-10 px-3 pt-5 pb-3 border-bottom">
-      <span>Application steps</span>
-      <Link
-        to="/"
-        className={`${
-          props.step === "Biodata" ? "ActiveNavigator" : ""
-        } text-gray-600`}
-        id="Biodata_Navigator"
+      <span className="Main">Application steps</span>
+      <span
+        className={` mx-2 ${
+          currentRoute === "biodata" ? "ActiveStep" : "text-gray-600"
+        }`}
       >
         Biodata
-      </Link>
-      <Link
-        to="/"
-        className={`${
-          props.step === "NOK_Guardian" ? "ActiveNavigator" : ""
-        } text-gray-600`}
+      </span>
+      <span
+        className={` mx-2 ${
+          currentRoute === "nok" ? "ActiveStep" : "text-gray-600"
+        }`}
       >
         NOK/Guardian
-      </Link>
-      <Link
-        to="/"
-        className={`${
-          props.step === "Education_Info" ? "ActiveNavigator" : ""
-        } text-gray-600`}
+      </span>
+      <span
+        className={` mx-2 ${
+          currentRoute === "education" ? "ActiveStep" : "text-gray-600"
+        }`}
       >
         Education
-      </Link>
-      <Link
-        to="/"
-        className={`${
-          props.step === "SSCE_Grade" ? "ActiveNavigator" : ""
-        } text-gray-600`}
+      </span>
+      <span
+        className={` mx-2 ${
+          currentRoute === "ssce" ? "ActiveStep" : "text-gray-600"
+        }`}
       >
         SSCE Grade
-      </Link>
-      <Link
-        to="/"
-        className={`${
-          props.step === "Additional_Info" ? "ActiveNavigator" : ""
-        } text-gray-600`}
+      </span>
+      <span
+        className={` mx-2 ${
+          currentRoute === "additional-info" ? "ActiveStep" : "text-gray-600"
+        }`}
       >
         Additional Info
-      </Link>
-      <Link
-        to="/"
-        className={`${
-          props.step === "Preview" ? "ActiveNavigator" : ""
-        } text-gray-600`}
+      </span>
+      <span
+        className={` mx-2 ${
+          currentRoute === "preview" ? "ActiveStep" : "text-gray-600"
+        }`}
       >
         Preview
-      </Link>
+      </span>
     </header>
   );
 };

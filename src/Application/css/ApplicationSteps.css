@@ -3,7 +3,7 @@ header.DashboardNavigator {
   width: 100%;
 }
 
-header.DashboardNavigator span {
+header.DashboardNavigator span.Main {
   padding: 10px 26px;
   display: inline-block;
   color: #0075ad;
@@ -14,27 +14,23 @@ header.DashboardNavigator span {
   user-select: none;
 }
 
-header.DashboardNavigator a.ActiveNavigator {
-  background-color: #0075ad;
-  color: #f9f8fc;
-}
-
-header.DashboardNavigator a {
-  padding: 10px 20px;
+header.DashboardNavigator span {
+  padding: 10px 26px;
   display: inline-block;
+  color: #0075ad;
+  background-color: #fff;
   font-weight: bold;
   border-radius: 0.35rem;
   cursor: pointer;
   user-select: none;
 }
 
-header.DashboardNavigator a::before {
-  content: "";
+header.DashboardNavigator span:hover {
+  background-color: #f9f8fc;
+  color: #0075ad;
 }
 
-header.DashboardNavigator a:hover {
-  background-color: #f9f8fc;
-  color: #122a69 !important;
-  transition: 0.3s;
-  text-decoration: none;
+.ActiveStep {
+  background-color: #0075ad !important;
+  color: #f9f8fc !important;
 }

@@ -1,22 +1,36 @@
 import * as Model from "../model/model";
-import { database, DATABASE_ID, BIODATA_COLLECTION } from "./appwrite";
-import { ID, Query } from "appwrite";
+import {
+  firestore,
+  BIODATA_COLLECTION,
+  NOK_GUARDIAN_COLLECTION,
+  ADDITIONAL_INFO_COLLECTION,
+  EDUCATION_INFO_COLLECTION,
+  SSCE_GRADE_COLLECTION,
+  APPLICATION_ID,
+} from "./firebase-db";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+
+/*
+********************************************************
+                        APPLICATION ID GENERATOR
+********************************************************
+*/
+function generateRandom6Digits() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+
+const random6Digits = generateRandom6Digits();
 
 /*
 ********************************************************
                         BIODATA
 ********************************************************
 */
-export const save_Biodata = async (Biodata: Model.Biodata) => {
+export const save_Biodata = async (Biodata: Model.Biodata, uid: string) => {
   try {
-    const promise = await database.createDocument(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      ID.unique(),
-      Biodata
-    );
-
-    return promise;
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, BIODATA_COLLECTION, uid);
+    await setDoc(docRef, Biodata, { merge: true });
   } catch (error) {
     throw new Error((error as Error).message);
   }
@@ -24,16 +38,13 @@ export const save_Biodata = async (Biodata: Model.Biodata) => {
 
 export const fetch_Biodata = async (uid: string) => {
   try {
-    const promise = await database.listDocuments(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      [Query.equal("uid", uid), Query.limit(1)]
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, BIODATA_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
 
-    const data = promise.documents;
-
-    if (data.length > 0) {
-      return data[0];
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data;
     }
   } catch (error) {
     throw new Error((error as Error).message);
@@ -45,14 +56,14 @@ export const fetch_Biodata = async (uid: string) => {
                         NOK GUARDIAN
 ********************************************************
 */
-export const save_NOK_Guardian = async (Biodata: Model.NOK_Guardian) => {
+export const save_NOK_Guardian = async (
+  NOK_Guardian: Model.NOK_Guardian,
+  uid: string
+) => {
   try {
-    const promise = await database.createDocument(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      ID.unique(),
-      Biodata
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, NOK_GUARDIAN_COLLECTION, uid);
+    const promise = await setDoc(docRef, NOK_Guardian, { merge: true });
 
     return promise;
   } catch (error) {
@@ -62,16 +73,13 @@ export const save_NOK_Guardian = async (Biodata: Model.NOK_Guardian) => {
 
 export const fetch_NOK_Guardian = async (uid: string) => {
   try {
-    const promise = await database.listDocuments(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      [Query.equal("uid", uid), Query.limit(1)]
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, NOK_GUARDIAN_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
 
-    const data = promise.documents;
-
-    if (data.length > 0) {
-      return data[0];
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data;
     }
   } catch (error) {
     throw new Error((error as Error).message);
@@ -83,14 +91,14 @@ export const fetch_NOK_Guardian = async (uid: string) => {
                         EDUCATION INFO
 ********************************************************
 */
-export const save_Education_Info = async (Biodata: Model.Education_Info) => {
+export const save_Education_Info = async (
+  Education_Info: Model.Education_Info,
+  uid: string
+) => {
   try {
-    const promise = await database.createDocument(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      ID.unique(),
-      Biodata
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, EDUCATION_INFO_COLLECTION, uid);
+    const promise = await setDoc(docRef, Education_Info, { merge: true });
 
     return promise;
   } catch (error) {
@@ -100,16 +108,13 @@ export const save_Education_Info = async (Biodata: Model.Education_Info) => {
 
 export const fetch_Education_Info = async (uid: string) => {
   try {
-    const promise = await database.listDocuments(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      [Query.equal("uid", uid), Query.limit(1)]
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, EDUCATION_INFO_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
 
-    const data = promise.documents;
-
-    if (data.length > 0) {
-      return data[0];
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data;
     }
   } catch (error) {
     throw new Error((error as Error).message);
@@ -121,14 +126,14 @@ export const fetch_Education_Info = async (uid: string) => {
                         SSCE GRADE
 ********************************************************
 */
-export const save_SSCE_Grade = async (Biodata: Model.SSCE_Grade) => {
+export const save_SSCE_Grade = async (
+  SSCE_Grade: Model.SSCE_Grade,
+  uid: string
+) => {
   try {
-    const promise = await database.createDocument(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      ID.unique(),
-      Biodata
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, SSCE_GRADE_COLLECTION, uid);
+    const promise = await setDoc(docRef, SSCE_Grade, { merge: true });
 
     return promise;
   } catch (error) {
@@ -138,16 +143,13 @@ export const save_SSCE_Grade = async (Biodata: Model.SSCE_Grade) => {
 
 export const fetch_SSCE_Grade = async (uid: string) => {
   try {
-    const promise = await database.listDocuments(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      [Query.equal("uid", uid), Query.limit(1)]
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, SSCE_GRADE_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
 
-    const data = promise.documents;
-
-    if (data.length > 0) {
-      return data[0];
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data;
     }
   } catch (error) {
     throw new Error((error as Error).message);
@@ -159,14 +161,14 @@ export const fetch_SSCE_Grade = async (uid: string) => {
                         ADDITIONAL INFO
 ********************************************************
 */
-export const save_Additional_Info = async (Biodata: Model.Additional_Info) => {
+export const save_Additional_Info = async (
+  Additional_Info: Model.Additional_Info,
+  uid: string
+) => {
   try {
-    const promise = await database.createDocument(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      ID.unique(),
-      Biodata
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, ADDITIONAL_INFO_COLLECTION, uid);
+    const promise = await setDoc(docRef, Additional_Info, { merge: true });
 
     return promise;
   } catch (error) {
@@ -176,16 +178,13 @@ export const save_Additional_Info = async (Biodata: Model.Additional_Info) => {
 
 export const fetch_Additional_Info = async (uid: string) => {
   try {
-    const promise = await database.listDocuments(
-      DATABASE_ID,
-      BIODATA_COLLECTION,
-      [Query.equal("uid", uid), Query.limit(1)]
-    );
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, ADDITIONAL_INFO_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
 
-    const data = promise.documents;
-
-    if (data.length > 0) {
-      return data[0];
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data;
     }
   } catch (error) {
     throw new Error((error as Error).message);
@@ -197,3 +196,30 @@ export const fetch_Additional_Info = async (uid: string) => {
                         FINAL
 ********************************************************
 */
+
+export const save_Application_ID = async (uid: string) => {
+  try {
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, APPLICATION_ID, uid);
+    const promise = await setDoc(docRef, { application_id: random6Digits });
+
+    return promise;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const fetch_Application_ID = async (uid: string) => {
+  try {
+    // Get a reference to the document you want to set
+    const docRef = doc(firestore, APPLICATION_ID, uid);
+    const snapshot = await getDoc(docRef);
+
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return data;
+    }
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
