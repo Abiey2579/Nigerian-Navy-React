@@ -6,7 +6,7 @@ const Requirements = () => {
   return (
     <>
       <Navbar />
-      <div className="mt-5 mb-5  text-NAVY_Black leading-loose px-20">
+      <div className="mt-5 mb-5  text-NAVY_Black leading-loose lg:px-20 md:px-10 px-5">
         <h2 className="text-3xl mb-4 underline">
           <u>The Nigerian Navy Application Guidelines (NNR 34) 2023/2024</u>
         </h2>
@@ -126,7 +126,7 @@ const Requirements = () => {
         </ol>
       </div>
 
-      <div className="mt-5 mb-5  text-NAVY_Black leading-loose px-20">
+      <div className="mt-5 mb-5  text-NAVY_Black leading-loose lg:px-20 md:px-10 px-5">
         <h2 className="text-3xl mb-4 underline">
           <u>Educational Requirements for Entry into each Category.</u>
         </h2>
@@ -360,7 +360,7 @@ const Requirements = () => {
         </ol>
       </div>
 
-      <div className="mt-5 mb-5  text-NAVY_Black leading-loose px-20">
+      <div className="mt-5 mb-5  text-NAVY_Black leading-loose lg:px-20 md:px-10 px-5">
         <h2 className="text-3xl mb-4 underline">
           <u>General Information for All Applicants</u>
         </h2>
@@ -388,14 +388,14 @@ const Requirements = () => {
         </ol>
       </div>
 
-      <div className=" mb-2 flex flex-col items-end text-NAVY_Black leading-loose px-20">
+      <div className=" mb-2 flex flex-col items-end text-NAVY_Black leading-loose lg:px-20 md:px-10 px-5">
         <div>
           <p>Signed</p>
           <p>Navy Secretary</p>
           <p>for Chief of the Naval Staff</p>
         </div>
       </div>
-      <div className=" mb-5 px-20">
+      <div className=" mb-5 lg:px-20 md:px-10 px-5">
         <Link
           to={uriPaths.AUTH}
           className="text-center block py-[10px] px-[22px] rounded text-NAVY_Gray hover:text-NAVY_Gray border-0 w-full bg-NAVY_Blue"

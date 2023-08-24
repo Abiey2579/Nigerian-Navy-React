@@ -14,6 +14,7 @@ import Spinner from "../Components/Spinner";
 
 const EducationInfo = () => {
   const [primary, setPrimary] = useState<string>("");
+
   const [primaryFrom, setPrimaryFrom] = useState<string>("");
   const [primaryTo, setPrimaryTo] = useState<string>("");
 
@@ -52,6 +53,18 @@ const EducationInfo = () => {
         secondaryTo.trim() === ""
       ) {
         alert("Fill the required fields");
+        return;
+      }
+
+      if (
+        primaryFrom.length !== 4 ||
+        primaryTo.length !== 4 ||
+        secondaryFrom.length !== 4 ||
+        secondaryTo.length !== 4 ||
+        institutionFrom.length !== 4 ||
+        institutionTo.length !== 4
+      ) {
+        alert("Please enter a valid Date Year (i.e. 2023 or 2022)");
         return;
       }
 
@@ -173,6 +186,8 @@ const EducationInfo = () => {
                     required
                     onChange={(e) => setPrimaryFrom(e.target.value)}
                     value={primaryFrom}
+                    minLength={4}
+                    maxLength={4}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -185,6 +200,8 @@ const EducationInfo = () => {
                     required
                     onChange={(e) => setPrimaryTo(e.target.value)}
                     value={primaryTo}
+                    minLength={4}
+                    maxLength={4}
                   />
                 </div>
               </div>
@@ -229,6 +246,8 @@ const EducationInfo = () => {
                     required
                     onChange={(e) => setSecondaryFrom(e.target.value)}
                     value={secondaryFrom}
+                    minLength={4}
+                    maxLength={4}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -241,6 +260,8 @@ const EducationInfo = () => {
                     required
                     onChange={(e) => setSecondaryTo(e.target.value)}
                     value={secondaryTo}
+                    minLength={4}
+                    maxLength={4}
                   />
                 </div>
               </div>
@@ -288,6 +309,8 @@ const EducationInfo = () => {
                     onChange={(e) => setInstitutionFrom(e.target.value)}
                     value={institutionFrom}
                     className="border p-2 rounded outline-0"
+                    minLength={4}
+                    maxLength={4}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -297,6 +320,8 @@ const EducationInfo = () => {
                     onChange={(e) => setInstitutionTo(e.target.value)}
                     value={institutionTo}
                     className="border p-2 rounded outline-0"
+                    minLength={4}
+                    maxLength={4}
                   />
                 </div>
               </div>

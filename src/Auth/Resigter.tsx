@@ -33,7 +33,8 @@ const Register = () => {
     try {
       setSpin(true);
       await account.create(ID.unique(), email, password);
-      navigate(uriPaths.BIODATA);
+      alert("Your account has been created successfully, Please Login");
+      navigate(uriPaths.LOGIN);
     } catch (error) {
       alert("A user with the same email already exists");
       setSpin(false);

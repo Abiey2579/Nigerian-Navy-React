@@ -246,13 +246,19 @@ const SSCEGrade = () => {
                   <label>
                     No. of sitting <span className="text-red-400">*</span>
                   </label>
-                  <input
-                    type="number"
+                  <select
                     className="border p-2 rounded outline-0"
                     required
                     onChange={(e) => setNoOfSitting(e.target.value)}
                     value={NoOfSitting}
-                  />
+                  >
+                    <option value=""></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
                 </div>
                 <div className="flex flex-col">
                   <label>

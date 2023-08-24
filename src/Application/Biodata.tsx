@@ -58,6 +58,7 @@ const Biodata = () => {
   const [imagePreview, setImagePreview] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [profileImage, setProfileImage] = useState<string>("");
+  const [spinPassport, setSpinPassport] = useState<boolean>(false);
 
   // FETCHED BIODATA STATE
   const [fetched_Biodata_State, set_fetched_Biodata_State] =
@@ -72,7 +73,6 @@ const Biodata = () => {
         firstName.trim() === "" ||
         religion.trim() === "" ||
         maritalStatus.trim() === "" ||
-        NoOfChildren.trim() === "" ||
         DOB.trim() === "" ||
         gender.trim() === "" ||
         height.trim() === "" ||
@@ -90,6 +90,22 @@ const Biodata = () => {
         alert("Fill the required fields");
         return;
       }
+
+      if (profileImage === "" && imagePreview === "") {
+        alert("Please upload your passport.");
+        return;
+      }
+
+      if (mobileNumber.length !== 11) {
+        alert("Please enter 11 digits Mobile Number Correctly");
+        return;
+      }
+
+      if (NIN.length !== 11) {
+        alert("Please enter a Valid 11 Digit NIN");
+        return;
+      }
+
       setSpin(true);
       await save_Biodata(
         {
@@ -147,6 +163,7 @@ const Biodata = () => {
       reader.readAsDataURL(selectedFile);
       // Check if the file already exists
       try {
+        setSpinPassport(true);
         const files = await storage.listFiles(PROFILE_PICTURE_BUCKET);
         const existingFile = files.files.find((file) => file.name === uid);
         if (existingFile) {
@@ -162,6 +179,7 @@ const Biodata = () => {
         );
 
         alert("Passport Uploaded Successfully");
+        setSpinPassport(false);
 
         const previewLink = await storage.getFilePreview(
           PROFILE_PICTURE_BUCKET,
@@ -171,6 +189,7 @@ const Biodata = () => {
         // Handle the successful file upload
         setProfileImage(previewLink.href);
       } catch (error) {
+        setSpinPassport(false);
         throw new Error((error as Error).message);
       }
     }
@@ -286,7 +305,11 @@ const Biodata = () => {
                   onClick={handleButtonClick}
                   className="Upload_Passport w-full bg-NAVY_Blue text-white rounded py-2"
                 >
-                  Upload
+                  {spinPassport ? (
+                    <Spinner className="w-5 fill-NAVY_Gray text-NAVY_Blue" />
+                  ) : (
+                    "Upload"
+                  )}
                 </button>
               </div>
             </div>
@@ -374,15 +397,12 @@ const Biodata = () => {
                   </select>
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="NoChildren">
-                    No. of Children <span className="text-red-400">*</span>
-                  </label>
+                  <label htmlFor="NoChildren">No. of Children</label>
                   <input
                     type="number"
                     onChange={(e) => setNoOfChildren(e.target.value)}
                     value={NoOfChildren}
                     className="border p-2 rounded outline-0"
-                    required
                   />
                 </div>
                 <div className="flex flex-col">
@@ -484,7 +504,7 @@ const Biodata = () => {
                     Mobile Number <span className="text-red-400">*</span>
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="border p-2 rounded outline-0"
                     onChange={(e) => setMobileNumber(e.target.value)}
                     value={mobileNumber}

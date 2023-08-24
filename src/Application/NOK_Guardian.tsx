@@ -67,6 +67,16 @@ const NOKGuardian = () => {
         return;
       }
 
+      if (
+        mobileNumber.length !== 11 ||
+        refereePhone1.length !== 11 ||
+        refereePhone2.length !== 11 ||
+        (refereePhone3 !== "" && refereePhone3.length !== 11)
+      ) {
+        alert("Please enter 11 digits Mobile Number Correctly");
+        return;
+      }
+
       setSpin(true);
       await save_NOK_Guardian(
         {
@@ -208,7 +218,7 @@ const NOKGuardian = () => {
                     Email <span className="text-red-400">*</span>
                   </label>
                   <input
-                    type="text"
+                    type="email"
                     className="border p-2 rounded outline-0"
                     required
                     onChange={(e) => setEmail(e.target.value)}
@@ -232,7 +242,7 @@ const NOKGuardian = () => {
                     Mobile Number <span className="text-red-400">*</span>
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="border p-2 rounded outline-0"
                     required
                     onChange={(e) => setMobileNumber(e.target.value)}
@@ -315,7 +325,7 @@ const NOKGuardian = () => {
                     Referee Phone <span className="text-red-400">*</span>
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="border p-2 rounded outline-0"
                     required
                     onChange={(e) => setRefereePhone1(e.target.value)}
@@ -354,7 +364,7 @@ const NOKGuardian = () => {
                     Referee Phone <span className="text-red-400">*</span>
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="border p-2 rounded outline-0"
                     required
                     onChange={(e) => setRefereePhone2(e.target.value)}
@@ -385,7 +395,7 @@ const NOKGuardian = () => {
                 <div className="flex flex-col">
                   <label>Referee Phone</label>
                   <input
-                    type="text"
+                    type="number"
                     onChange={(e) => setRefereePhone3(e.target.value)}
                     value={refereePhone3}
                     className="border p-2 rounded outline-0 "

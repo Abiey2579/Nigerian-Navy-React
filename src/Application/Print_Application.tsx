@@ -144,10 +144,7 @@ const PrintApplication = () => {
               </button>
             </div>
             {/* Particulars */}
-            <div
-              className="Printable_Area px-10 mb-10 Particulars"
-              id="Particulars"
-            >
+            <div className="Printable_Area mb-10 Particulars" id="Particulars">
               <div className="MainPrint_Header">
                 <div className="flex items-center justify-center">
                   <img

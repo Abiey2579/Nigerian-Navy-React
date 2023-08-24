@@ -21,18 +21,17 @@ const Navbar = (props: { email: string }) => {
     <Popover className="border-b relative bg-white w-full">
       <div className="lg:px-24 md:px-10 pl-3 pr-6 ">
         <div className="flex items-center justify-between md:justify-start md:space-x-10">
-          <Link className="text-gray-700" to="/">
+          <div className="text-gray-700 cursor-pointer select-none">
             <LogoStamp />
-          </Link>
+          </div>
 
           <div className="items-center gap-3 justify-end md:flex md:flex-1 lg:w-0">
-            <Link
-              className="lg:flex md:flex hidden text-NAVY_Blue font-semibold px-[22px] py-[10px] rounded text-center block transition hover:bg-slate-100"
-              to={uriPaths.AUTH}
+            <span
+              className="lg:flex md:flex hidden text-NAVY_Blue cursor-pointer select-none font-semibold px-[22px] py-[10px] rounded text-center block transition hover:bg-slate-100"
               style={{ textDecoration: "none" }}
             >
               {props.email}
-            </Link>
+            </span>
             <button
               className="recruitment-nav-link text-NAVY_Blue font-semibold px-[22px] py-[10px] rounded text-center block transition hover:bg-slate-100"
               style={{ textDecoration: "none" }}
