@@ -11,6 +11,7 @@ import {
 } from "../Asset/config/functions";
 import { account } from "../Asset/config/appwrite";
 import * as Model from "../Asset/model/model";
+import Spinner from "../Components/Spinner";
 
 const SSCEGrade = () => {
   const [examType, setExamType] = useState<string>("");
@@ -47,6 +48,27 @@ const SSCEGrade = () => {
 
   const [uid, setUID] = useState<string>("");
   const [providerUid, setProviderUid] = useState<string>("");
+  const [spin, setSpin] = useState<boolean>(false);
+  const [preventView, setPreventView] = useState<boolean>(true);
+
+  // ARRAY TO CHECK DUPLICATE SSCE SUBJECT
+  const SSCE_Subjects = [
+    subject1,
+    subject2,
+    subject3,
+    subject4,
+    subject5,
+    subject6,
+    subject7,
+    subject8,
+    subject9,
+  ];
+
+  // Function to check for duplicate values in an array
+  function hasDuplicates(Subjects_Array: string[]) {
+    const uniqueValues = new Set(Subjects_Array);
+    return uniqueValues.size !== Subjects_Array.length;
+  }
 
   // FETCHED SSCE GRADE STATE
   const [fetched_SSCE_Grade_State, set_fetched_SSCE_Grade_State] =
@@ -75,6 +97,12 @@ const SSCEGrade = () => {
         return;
       }
 
+      if (hasDuplicates(SSCE_Subjects)) {
+        alert("Duplicate SSCE Subjects Detected. SSCE Subjects must be unique");
+        return;
+      }
+
+      setSpin(true);
       await save_SSCE_Grade(
         {
           examType: examType,
@@ -111,9 +139,9 @@ const SSCEGrade = () => {
         },
         uid
       );
-
       navigate(uriPaths.ADDITIONAL_INFO);
     } catch (error) {
+      setSpin(false);
       throw new Error((error as Error).message);
     }
   };
@@ -137,6 +165,7 @@ const SSCEGrade = () => {
           if (fetched_SSCE_Grade) {
             set_fetched_SSCE_Grade_State(fetched_SSCE_Grade);
           }
+          setPreventView(false);
         } else {
           await account.deleteSessions().finally(() => {
             navigate(uriPaths.LOGIN);
@@ -188,295 +217,308 @@ const SSCEGrade = () => {
 
   return (
     <>
-      <Navbar email={providerUid} />
-      <ApplicationSteps />
-      <section className="lg:px-24 md:px-10 px-3 mt-5 mb-5">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col">
-              <label>
-                Exam Type <span className="text-red-400">*</span>
-              </label>
-              <select
-                onChange={(e) => setExamType(e.target.value)}
-                value={examType}
-                className="border p-2 rounded outline-0"
-                required
-              >
-                <option value=""></option>
-                <option value="NECO">NECO</option>
-                <option value="WASSCE">WASSCE</option>
-                <option value="NABTEB">NABTEB</option>
-                <option value="GCE">GCE</option>
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <label>
-                No. of sitting <span className="text-red-400">*</span>
-              </label>
-              <input
-                type="number"
-                className="border p-2 rounded outline-0"
-                required
-                onChange={(e) => setNoOfSitting(e.target.value)}
-                value={NoOfSitting}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label>
-                Center No. <span className="text-red-400">*</span>
-              </label>
-              <input
-                type="number"
-                className="border p-2 rounded outline-0"
-                required
-                onChange={(e) => setCenterNo(e.target.value)}
-                value={centerNo}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label>
-                Exam No. <span className="text-red-400">*</span>
-              </label>
-              <input
-                type="text"
-                className="border p-2 rounded outline-0"
-                required
-                onChange={(e) => setExamNo(e.target.value)}
-                value={examNo}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 my-5">
-            <h2 className="text-2xl font-bold my-3">Subjects</h2>
-            <h2 className="text-2xl font-bold my-3">Grades</h2>
-          </div>
-          {/* 1 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select className="border p-2 rounded outline-0" required>
-              <option value="English Language">English Language</option>
-            </select>
-            <select
-              onChange={(e) => setGrade1(e.target.value)}
-              value={grade1}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 2 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select className="border p-2 rounded outline-0" required>
-              <option value="Mathematics">Mathematics</option>
-            </select>
+      {/* TO PREVENT VIEWING APPLICATION BEFORE LOADING DATA */}
+      {preventView === false ? (
+        <>
+          <Navbar email={providerUid} />
+          <ApplicationSteps />
+          <section className="lg:px-24 md:px-10 px-3 mt-5 mb-5">
+            <form onSubmit={(e) => e.preventDefault()}>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label>
+                    Exam Type <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    onChange={(e) => setExamType(e.target.value)}
+                    value={examType}
+                    className="border p-2 rounded outline-0"
+                    required
+                  >
+                    <option value=""></option>
+                    <option value="NECO">NECO</option>
+                    <option value="WASSCE">WASSCE</option>
+                    <option value="NABTEB">NABTEB</option>
+                    <option value="GCE">GCE</option>
+                  </select>
+                </div>
+                <div className="flex flex-col">
+                  <label>
+                    No. of sitting <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    className="border p-2 rounded outline-0"
+                    required
+                    onChange={(e) => setNoOfSitting(e.target.value)}
+                    value={NoOfSitting}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label>
+                    Center No. <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    className="border p-2 rounded outline-0"
+                    required
+                    onChange={(e) => setCenterNo(e.target.value)}
+                    value={centerNo}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label>
+                    Exam No. <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="border p-2 rounded outline-0"
+                    required
+                    onChange={(e) => setExamNo(e.target.value)}
+                    value={examNo}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 my-5">
+                <h2 className="text-2xl font-bold my-3">Subjects</h2>
+                <h2 className="text-2xl font-bold my-3">Grades</h2>
+              </div>
+              {/* 1 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select className="border p-2 rounded outline-0" required>
+                  <option value="English Language">English Language</option>
+                </select>
+                <select
+                  onChange={(e) => setGrade1(e.target.value)}
+                  value={grade1}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 2 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select className="border p-2 rounded outline-0" required>
+                  <option value="Mathematics">Mathematics</option>
+                </select>
 
-            <select
-              onChange={(e) => setGrade2(e.target.value)}
-              value={grade2}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 3 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject3(e.target.value)}
-              value={subject3}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setGrade2(e.target.value)}
+                  value={grade2}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 3 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject3(e.target.value)}
+                  value={subject3}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
 
-            <select
-              onChange={(e) => setGrade3(e.target.value)}
-              value={grade3}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 4 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject4(e.target.value)}
-              value={subject4}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setGrade3(e.target.value)}
+                  value={grade3}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 4 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject4(e.target.value)}
+                  value={subject4}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
 
-            <select
-              onChange={(e) => setGrade4(e.target.value)}
-              value={grade4}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 5 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject5(e.target.value)}
-              value={subject5}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setGrade4(e.target.value)}
+                  value={grade4}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 5 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject5(e.target.value)}
+                  value={subject5}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
 
-            <select
-              onChange={(e) => setGrade5(e.target.value)}
-              value={grade5}
-              className="border p-2 rounded outline-0"
-              required
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 6 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject6(e.target.value)}
-              value={subject6}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setGrade5(e.target.value)}
+                  value={grade5}
+                  className="border p-2 rounded outline-0"
+                  required
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 6 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject6(e.target.value)}
+                  value={subject6}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
 
-            <select
-              onChange={(e) => setGrade6(e.target.value)}
-              value={grade6}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 7 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject7(e.target.value)}
-              value={subject7}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setGrade6(e.target.value)}
+                  value={grade6}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 7 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject7(e.target.value)}
+                  value={subject7}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
 
-            <select
-              onChange={(e) => setGrade7(e.target.value)}
-              value={grade7}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 8 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject8(e.target.value)}
-              value={subject8}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setGrade7(e.target.value)}
+                  value={grade7}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 8 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject8(e.target.value)}
+                  value={subject8}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
 
-            <select
-              onChange={(e) => setGrade8(e.target.value)}
-              value={grade8}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-          {/* 9 */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
-            <select
-              onChange={(e) => setSubject9(e.target.value)}
-              value={subject9}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Courses.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-            <select
-              onChange={(e) => setGrade9(e.target.value)}
-              value={grade9}
-              className="border p-2 rounded outline-0"
-            >
-              <option value=""></option>
-              {SSCE_Course_Grade.map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
+                <select
+                  onChange={(e) => setGrade8(e.target.value)}
+                  value={grade8}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {/* 9 */}
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <select
+                  onChange={(e) => setSubject9(e.target.value)}
+                  value={subject9}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Courses.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+                <select
+                  onChange={(e) => setGrade9(e.target.value)}
+                  value={grade9}
+                  className="border p-2 rounded outline-0"
+                >
+                  <option value=""></option>
+                  {SSCE_Course_Grade.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-5">
-            <button
-              onClick={handlePrevious}
-              className="bg-NAVY_Blue border py-2 px-5 rounded outline-0 text-white"
-            >
-              Previous
-            </button>
-            <div></div>
-            <button
-              onClick={handleNext}
-              className="bg-NAVY_Blue border py-2 px-5 rounded outline-0 text-white"
-            >
-              Next
-            </button>
-          </div>
-        </form>
-      </section>
+              <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-5">
+                <button
+                  onClick={handlePrevious}
+                  className="bg-NAVY_Blue border py-2 px-5 rounded outline-0 text-white"
+                >
+                  Previous
+                </button>
+                <div></div>
+                <button
+                  onClick={handleNext}
+                  className="bg-NAVY_Blue border py-2 px-5 rounded outline-0 text-white"
+                >
+                  {spin ? (
+                    <Spinner className="w-5 fill-NAVY_Gray text-NAVY_Blue" />
+                  ) : (
+                    "Next"
+                  )}
+                </button>
+              </div>
+            </form>
+          </section>
+        </>
+      ) : (
+        <div className="w-full h-screen flex justify-center items-center">
+          <Spinner className="w-10 fill-NAVY_Blue text-NAVY_Gray" />
+        </div>
+      )}
     </>
   );
 };

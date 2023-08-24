@@ -19,3 +19,4 @@ export const DATABASE_ID = "64e5af7e8c44c6b05853";
 // export const EDUCATION_INFO_COLLECTION = "";
 // export const SSCE_GRADE_COLLECTION = "";
 // export const ADDITIONAL_INFO_COLLECTION = "";
+export const PROFILE_PICTURE_BUCKET = "64e60e07952e396318d7";

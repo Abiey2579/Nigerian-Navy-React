@@ -8,10 +8,13 @@ import * as uriPaths from "../Asset/common/uriPaths";
 import { FormEvent } from "react";
 import { account } from "../Asset/config/appwrite";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../Components/Spinner";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [spin, setSpin] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,10 +25,13 @@ const Login = () => {
     }
 
     try {
+      setSpin(true);
       await account.createEmailSession(email, password);
       navigate(uriPaths.BIODATA);
     } catch (error) {
       alert("Incorrect Email or Password");
+      setSpin(false);
+
       // throw new Error((error as Error).message);
     }
   };
@@ -71,7 +77,13 @@ const Login = () => {
               value={password}
               autoComplete="current-password"
             />
-            <button className="Login_BTN">Log In</button>
+            <button className="Login_BTN">
+              {spin ? (
+                <Spinner className="w-5 fill-NAVY_Gray text-NAVY_Blue" />
+              ) : (
+                "Log In"
+              )}
+            </button>
 
             <span>New Here?</span>
             <Link to={uriPaths.REGISTER} className="ShowForgotPassword">

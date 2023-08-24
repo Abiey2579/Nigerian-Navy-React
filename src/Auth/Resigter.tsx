@@ -9,11 +9,13 @@ import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { account } from "../Asset/config/appwrite";
 import { ID } from "appwrite";
+import Spinner from "../Components/Spinner";
 
 const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [spin, setSpin] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
@@ -29,10 +31,12 @@ const Register = () => {
     }
 
     try {
+      setSpin(true);
       await account.create(ID.unique(), email, password);
       navigate(uriPaths.BIODATA);
     } catch (error) {
       alert("A user with the same email already exists");
+      setSpin(false);
       // throw new Error((error as Error).message);
     }
   };
@@ -88,7 +92,13 @@ const Register = () => {
               required
               autoComplete="new-password"
             />
-            <button className="Register">Register</button>
+            <button className="Register">
+              {spin ? (
+                <Spinner className="w-5 fill-NAVY_Gray text-NAVY_Blue" />
+              ) : (
+                "Register"
+              )}
+            </button>
 
             <span>Already have an account?</span>
             <Link to={uriPaths.LOGIN} className="ShowLogin">

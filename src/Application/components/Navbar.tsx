@@ -27,7 +27,7 @@ const Navbar = (props: { email: string }) => {
 
           <div className="items-center gap-3 justify-end md:flex md:flex-1 lg:w-0">
             <Link
-              className="text-NAVY_Blue font-semibold px-[22px] py-[10px] rounded text-center block transition hover:bg-slate-100"
+              className="lg:flex md:flex hidden text-NAVY_Blue font-semibold px-[22px] py-[10px] rounded text-center block transition hover:bg-slate-100"
               to={uriPaths.AUTH}
               style={{ textDecoration: "none" }}
             >

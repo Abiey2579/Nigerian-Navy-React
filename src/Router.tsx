@@ -16,7 +16,7 @@ import ApplicationPreview from "./Application/Application_Preview";
 const router = createBrowserRouter([
   {
     path: uriPaths.HOME,
-    element: <Requirements />,
+    element: <Auth />,
     errorElement: "<ErrorElement />",
   },
   {
