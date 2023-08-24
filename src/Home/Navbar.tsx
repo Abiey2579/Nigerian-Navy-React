@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <Popover className="border-b relative bg-white w-full">
       <div className="lg:px-24 md:px-10 pl-3 pr-6 ">
-        <div className="flex items-center justify-between py-1 md:justify-start md:space-x-10 h-20">
+        <div className="flex items-center justify-between md:justify-start md:space-x-10 ">
           <Link className="text-gray-700" to="/">
             <LogoStamp />
           </Link>
