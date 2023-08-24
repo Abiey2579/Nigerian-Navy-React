@@ -14,7 +14,7 @@ const Auth = () => {
       >
         <h1 className="text-white text-4xl font-bold mb-3">NIGERIAN NAVY</h1>
         <h3 className="text-white text-2xl font-medium max-w-xl mb-2">
-          APPLICATION GUIDELINES FOR NIGERIAN NAVY 2023 RECRUITMENT EXERCISE
+          APPLICATION GUIDELINES FOR NIGERIAN NAVY BATCH 36 RECRUITMENT EXERCISE
         </h3>
         <Link
           to={uriPaths.REQUIREMENTS}

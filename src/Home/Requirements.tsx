@@ -8,7 +8,7 @@ const Requirements = () => {
       <Navbar />
       <div className="mt-5 mb-5  text-NAVY_Black leading-loose lg:px-20 md:px-10 px-5">
         <h2 className="text-3xl mb-4 underline">
-          <u>The Nigerian Navy Application Guidelines (NNR 34) 2023/2024</u>
+          <u>The Nigerian Navy Application Guidelines (NNR 36) 2023</u>
         </h2>
         <ol style={{ listStyle: "auto" }}>
           <li>Applicants must be citizen of Nigeria by birth.</li>
