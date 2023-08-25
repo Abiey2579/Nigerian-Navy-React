@@ -8,7 +8,7 @@ const Requirements = () => {
       <Navbar />
       <div className="mt-5 mb-5  text-NAVY_Black leading-loose lg:px-20 md:px-10 px-5">
         <h2 className="text-3xl mb-4 underline">
-          <u>The Nigerian Navy Application Guidelines (NNR 36) 2023</u>
+          <u>The Nigerian Navy Application Guidelines (NNR 36)</u>
         </h2>
         <ol style={{ listStyle: "auto" }}>
           <li>Applicants must be citizen of Nigeria by birth.</li>
@@ -366,7 +366,7 @@ const Requirements = () => {
         </h2>
         <ol style={{ listStyle: "auto" }}>
           <li>
-            The Nigerian Navy recruitment 2023 exercise will commence with
+            The Nigerian Navy Batch 36 Recruitment exercise will commence with
             screening of applicants’ credentials and an aptitude test at
             designated centres nationwide on a date to be announced later.
           </li>
