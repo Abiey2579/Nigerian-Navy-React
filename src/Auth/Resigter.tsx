@@ -58,7 +58,8 @@ const Register = () => {
               className="navbar-brand-logo"
             />
             <div>
-              <h3>NIGERIAN NAVY</h3> <span>e-Recruitment</span>
+              <h3 className="font-bold">NIGERIAN NAVY</h3>{" "}
+              <span>e-Recruitment</span>
             </div>
           </header>
 
