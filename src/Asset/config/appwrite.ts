@@ -3,8 +3,8 @@ import { Client, Account, Databases, Storage } from "appwrite";
 const client = new Client();
 
 client
-  // .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-  .setEndpoint("https://appwrite.joinnigeriannavy.com.ng/v1") // Your API Endpoint
+  .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
+  // .setEndpoint("https://appwrite.joinnigeriannavy.com.ng/v1") // Your API Endpoint
   .setProject("64e5ad32d47ae222149e"); // Your project ID
 
 export const account = new Account(client);

@@ -32,7 +32,7 @@ const Login = () => {
       alert("Incorrect Email or Password");
       setSpin(false);
 
-      // throw new Error((error as Error).message);
+      throw new Error((error as Error).message);
     }
   };
   return (

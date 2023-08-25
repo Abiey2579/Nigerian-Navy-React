@@ -152,8 +152,8 @@ const Biodata = () => {
   ) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile?.size > 100 * 1024) {
-        alert("Maximum file size allowed is 100KB.");
+      if (selectedFile?.size > 25 * 1024) {
+        alert("Maximum file size allowed is 25KB.");
         return;
       }
       const reader = new FileReader();
