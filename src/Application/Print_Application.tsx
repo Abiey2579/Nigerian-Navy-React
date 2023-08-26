@@ -165,12 +165,13 @@ const PrintApplication = () => {
                 </p>
               </div>
               <div className="flex justify-end">
-                <div
-                  className="w-48 h-52 bg-slate-300 mb-3 bg-center bg-no-repeat bg-cover rounded border"
-                  style={{
-                    backgroundImage: `url(${profileImage})`,
-                  }}
-                ></div>
+                <div className="w-48 h-52 bg-slate-300 mb-3 rounded border">
+                  <img
+                    src={profileImage}
+                    className="w-48 h-52 rounded"
+                    alt="Applicant Passport"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-5 mb-5">
@@ -779,12 +780,13 @@ const PrintApplication = () => {
                 </p>
               </div>
               <div className="flex justify-end mb-10">
-                <div
-                  className="w-48 h-52 bg-slate-300 mb-3 bg-center bg-no-repeat bg-cover rounded border"
-                  style={{
-                    backgroundImage: `url(${profileImage})`,
-                  }}
-                ></div>
+                <div className="w-48 h-52 bg-slate-300 mb-3 rounded border">
+                  <img
+                    src={profileImage}
+                    className="w-48 h-52 rounded"
+                    alt="Applicant Passport"
+                  />
+                </div>
               </div>
               <div className="row DeclarationContainer mt-5">
                 <p className="mb-4 text-xl">
@@ -899,12 +901,13 @@ const PrintApplication = () => {
                 </p>
               </div>
               <div className="flex justify-end">
-                <div
-                  className="w-48 h-52 bg-slate-300 mb-3 bg-center bg-no-repeat bg-cover rounded border"
-                  style={{
-                    backgroundImage: `url(${profileImage})`,
-                  }}
-                ></div>
+                <div className="w-48 h-52 bg-slate-300 mb-3 rounded border">
+                  <img
+                    src={profileImage}
+                    className="w-48 h-52 rounded"
+                    alt="Applicant Passport"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-5 mb-5">
@@ -1069,12 +1072,13 @@ const PrintApplication = () => {
                 <p className="text-center text-xl mb-4">POLICE CERTIFICATION</p>
               </div>
               <div className="flex justify-end">
-                <div
-                  className="w-48 h-52 bg-slate-300 mb-3 bg-center bg-no-repeat bg-cover rounded border"
-                  style={{
-                    backgroundImage: `url(${profileImage})`,
-                  }}
-                ></div>
+                <div className="w-48 h-52 bg-slate-300 mb-3 rounded border">
+                  <img
+                    src={profileImage}
+                    className="w-48 h-52 rounded"
+                    alt="Applicant Passport"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-1 gap-5 mb-6">
                 <p className="text-black text-xl">

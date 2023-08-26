@@ -48,7 +48,7 @@ const Auth = () => {
         </div>
       </header>
 
-      <section className="grid md:grid-cols-3 grid-cols-1 items-center mt-4 lg:px-24 md:px-10 px-3">
+      <section className="grid md:grid-cols-3 grid-cols-1 items-center my-4 lg:px-24 md:px-10 px-3">
         <div>
           <h4 className="text-2xl">WELCOME:</h4>
           <Link

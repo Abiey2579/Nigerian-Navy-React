@@ -150,12 +150,13 @@ const ApplicationPreview = () => {
               Particulars of Candidate
             </h2>
             <div className="flex justify-end mb-10">
-              <div
-                className="w-48 h-52 bg-slate-300 mb-3 bg-center bg-no-repeat bg-cover rounded border"
-                style={{
-                  backgroundImage: `url(${profileImage})`,
-                }}
-              ></div>
+              <div className="w-48 h-52 bg-slate-300 mb-3 rounded border">
+                <img
+                  src={profileImage}
+                  className="w-48 h-52 rounded"
+                  alt="Applicant Passport"
+                />
+              </div>
             </div>
 
             <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-8 mb-20">
