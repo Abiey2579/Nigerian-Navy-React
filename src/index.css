@@ -64,7 +64,6 @@ code {
 
   .Printable_Area {
     page-break-after: always !important;
-    size: letter;
   }
 
   .hide-on-print {
