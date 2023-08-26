@@ -76,6 +76,8 @@ const PrintApplication = () => {
         const application_id = await fetch_Application_ID(promise.userId);
         if (application_id) {
           setApplicant_ID(application_id);
+        } else {
+          navigate(uriPaths.BIODATA);
         }
         // FETCHING ALL COLLECTIONS
         const fetched_Biodata = await fetch_Biodata(promise.userId);
