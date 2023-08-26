@@ -491,19 +491,21 @@ const PrintApplication = () => {
                   <th>Qualification</th>
                 </thead>
                 <tr className="border-b">
-                  <td>{fetched_Education_Info_State?.institution ?? ""}</td>
-                  <td>{fetched_Education_Info_State?.courseOfStudy ?? ""}</td>
-                  <td>{fetched_Education_Info_State?.institutionFrom ?? ""}</td>
-                  <td>{fetched_Education_Info_State?.institutionTo ?? ""}</td>
+                  <td>{fetched_Education_Info_State?.institution ?? "-"}</td>
+                  <td>{fetched_Education_Info_State?.courseOfStudy ?? "-"}</td>
+                  <td>
+                    {fetched_Education_Info_State?.institutionFrom ?? "-"}
+                  </td>
+                  <td>{fetched_Education_Info_State?.institutionTo ?? "-"}</td>
                   <td>
                     {fetched_Education_Info_State?.institutionQualification ??
-                      ""}
+                      "-"}
                   </td>
                 </tr>
               </table>
             </div>
             {/* SSCE */}
-            <div className="mb-10 SSCE" id="SSCE">
+            <div className="Printable_Area mb-10 SSCE" id="SSCE">
               <div className="MainPrint_Header">
                 <div className="flex items-center justify-center">
                   <img
