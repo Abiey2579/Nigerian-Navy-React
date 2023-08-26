@@ -491,19 +491,32 @@ const PrintApplication = () => {
                   <th>Qualification</th>
                 </thead>
                 <tr className="border-b">
-                  <td>{fetched_Education_Info_State?.institution ?? "nil"}</td>
                   <td>
-                    {fetched_Education_Info_State?.courseOfStudy ?? "nil"}
+                    {fetched_Education_Info_State?.institution?.trim() === ""
+                      ? "nil"
+                      : fetched_Education_Info_State?.institution}
                   </td>
                   <td>
-                    {fetched_Education_Info_State?.institutionFrom ?? "nil"}
+                    {fetched_Education_Info_State?.courseOfStudy?.trim() === ""
+                      ? "nil"
+                      : fetched_Education_Info_State?.courseOfStudy}
                   </td>
                   <td>
-                    {fetched_Education_Info_State?.institutionTo ?? "nil"}
+                    {fetched_Education_Info_State?.institutionFrom?.trim() ===
+                    ""
+                      ? "nil"
+                      : fetched_Education_Info_State?.institutionFrom}
                   </td>
                   <td>
-                    {fetched_Education_Info_State?.institutionQualification ??
-                      "nil"}
+                    {fetched_Education_Info_State?.institutionTo?.trim() === ""
+                      ? "nil"
+                      : fetched_Education_Info_State?.institutionTo}
+                  </td>
+                  <td>
+                    {fetched_Education_Info_State?.institutionQualification?.trim() ===
+                    ""
+                      ? "nil"
+                      : fetched_Education_Info_State?.institutionQualification}
                   </td>
                 </tr>
               </table>
