@@ -503,7 +503,7 @@ const PrintApplication = () => {
               </table>
             </div>
             {/* SSCE */}
-            <div className="Printable_Area mb-10 SSCE" id="SSCE">
+            <div className="mb-10 SSCE" id="SSCE">
               <div className="MainPrint_Header">
                 <div className="flex items-center justify-center">
                   <img
@@ -588,32 +588,6 @@ const PrintApplication = () => {
                   <td>{fetched_SSCE_Grade_State?.grade9 ?? ""}</td>
                 </tr>
               </table>
-              <div className="grid grid-cols-2 gap-5 mb-5">
-                <p className="text-black text-xl">
-                  Exam Type:{" "}
-                  <span className="text-black text-xl ml-2">
-                    {fetched_SSCE_Grade_State?.examType ?? ""}
-                  </span>
-                </p>
-                <p className="text-black text-xl">
-                  No. of sitting:{" "}
-                  <span className="text-black text-xl ml-2">
-                    {fetched_SSCE_Grade_State?.NoOfSitting ?? ""}
-                  </span>
-                </p>
-                <p className="text-black text-xl">
-                  Center No.:{" "}
-                  <span className="text-black text-xl ml-2">
-                    {fetched_SSCE_Grade_State?.centerNo ?? ""}
-                  </span>
-                </p>
-                <p className="text-black text-xl">
-                  Exam No.:{" "}
-                  <span className="text-black text-xl ml-2">
-                    {fetched_SSCE_Grade_State?.examNo ?? ""}
-                  </span>
-                </p>
-              </div>
             </div>
             {/* Additional */}
             <div className="Printable_Area mb-10 Additional" id="Additional">
