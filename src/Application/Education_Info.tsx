@@ -61,8 +61,8 @@ const EducationInfo = () => {
         primaryTo.length !== 4 ||
         secondaryFrom.length !== 4 ||
         secondaryTo.length !== 4 ||
-        institutionFrom.length !== 4 ||
-        institutionTo.length !== 4
+        (institutionFrom !== "" && institutionFrom.length !== 4) ||
+        (institutionTo !== "" && institutionTo.length !== 4)
       ) {
         alert("Please enter a valid Date Year (i.e. 2023 or 2022)");
         return;
