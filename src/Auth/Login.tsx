@@ -15,6 +15,10 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [spin, setSpin] = useState<boolean>(false);
 
+  alert(
+    "This is Not Nigerian Navy Official Recruitment Portal; This is a project made for Educational Purpose Only"
+  );
+
   const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import * as uriPaths from "../Asset/common/uriPaths";
 
 const Auth = () => {
+  alert(
+    "This is Not Nigerian Navy Official Recruitment Portal; This is a project made for Educational Purpose Only"
+  );
   return (
     <>
       <Navbar />

@@ -18,6 +18,10 @@ const Register = () => {
   const [spin, setSpin] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  alert(
+    "This is Not Nigerian Navy Official Recruitment Portal; This is a project made for Educational Purpose Only"
+  );
+
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email && !password && !confirmPassword) {
