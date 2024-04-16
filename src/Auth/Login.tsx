@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import CoverImage from "../Asset/Images/navy-slider-2.jpg";
 import Logo from "../Asset/Images/navy_logo.png";
@@ -15,10 +15,11 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [spin, setSpin] = useState<boolean>(false);
 
-  alert(
+ useEffect(() => {
+     alert(
     "This is Not Nigerian Navy Official Recruitment Portal; This is a project made for Educational Purpose Only"
   );
-
+  },[])
   const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
